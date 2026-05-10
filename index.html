@@ -12,66 +12,51 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hira
 @keyframes pulse{0%,100%{transform:translateX(-50%) scale(1);opacity:0.5}50%{transform:translateX(-50%) scale(1.2);opacity:0.8}}
 .cover h1{font-size:2.5em;margin-bottom:10px;background:linear-gradient(45deg,#e91e63,#ff6090);-webkit-background-clip:text;-webkit-text-fill-color:transparent;position:relative;z-index:1}
 .cover .subtitle{font-size:1.2em;color:#ff80ab;margin-bottom:30px;position:relative;z-index:1}
-.cover .ages{display:flex;gap:15px;flex-wrap:wrap;justify-content:center;position:relative;z-index:1}
-.cover .age-tag{padding:8px 18px;border-radius:20px;background:rgba(233,30,99,0.2);border:1px solid rgba(233,30,99,0.5);font-size:0.95em;color:#ff80ab}
 .cover .scroll-hint{position:absolute;bottom:40px;animation:bounce 2s infinite;color:#ff80ab;font-size:0.9em}
 @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
 .nav-bar{position:sticky;top:0;background:rgba(26,26,46,0.95);backdrop-filter:blur(10px);z-index:100;display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch;padding:10px 5px;border-bottom:1px solid rgba(233,30,99,0.3);scrollbar-width:none}
 .nav-bar::-webkit-scrollbar{display:none}
 .nav-btn{flex-shrink:0;padding:8px 16px;margin:0 4px;border-radius:20px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:#ccc;font-size:0.85em;white-space:nowrap;cursor:pointer;transition:all 0.3s}
 .nav-btn.active{background:rgba(233,30,99,0.3);border-color:#e91e63;color:#fff}
-.nav-btn .count{display:inline-block;background:rgba(233,30,99,0.5);border-radius:10px;padding:1px 7px;font-size:0.85em;margin-left:5px}
 .theme-section{padding:20px 15px}
-.theme-title{font-size:1.4em;margin-bottom:5px;color:#ff80ab}
-.theme-desc{font-size:0.85em;color:#999;margin-bottom:15px}
-.photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px}
-.photo-item{border-radius:12px;overflow:hidden;aspect-ratio:1;cursor:pointer;position:relative;border:2px solid transparent;transition:all 0.3s;background:#222}
-.photo-item:active{border-color:#e91e63;transform:scale(0.97)}
-.photo-item img{width:100%;height:100%;object-fit:cover;display:block}
-.lightbox{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);z-index:1000;flex-direction:column;justify-content:center;align-items:center}
-.lightbox.active{display:flex}
-.lightbox img{max-width:100%;max-height:80vh;object-fit:contain;border-radius:8px}
-.lightbox .info{position:absolute;bottom:60px;color:#fff;font-size:0.9em;text-align:center;padding:0 20px}
-.lightbox .nav-left,.lightbox .nav-right{position:absolute;top:50%;transform:translateY(-50%);width:50px;height:50px;background:rgba(255,255,255,0.15);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.5em;color:#fff;cursor:pointer;user-select:none}
-.lightbox .nav-left{left:10px}
-.lightbox .nav-right{right:10px}
-.lightbox .close-btn{position:absolute;top:20px;right:20px;width:40px;height:40px;background:rgba(255,255,255,0.15);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.3em;color:#fff;cursor:pointer}
-.lightbox .theme-tag{position:absolute;top:20px;left:20px;padding:5px 14px;border-radius:15px;background:rgba(233,30,99,0.6);color:#fff;font-size:0.85em}
-.footer{text-align:center;padding:40px 20px;color:#666;font-size:0.85em}
-@media(min-width:768px){
-  .photo-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
-  .cover h1{font-size:3.5em}
-}
+.theme-title{font-size:1.4em;margin-bottom:15px;color:#ff80ab}
+.photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.photo-grid .photo-item{position:relative;padding-bottom:100%;overflow:hidden;border-radius:12px;cursor:pointer;transition:transform 0.3s}
+.photo-grid .photo-item:hover{transform:scale(1.02)}
+.photo-grid .photo-item img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover}
+#lightbox{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);z-index:1000;display:none;justify-content:center;align-items:center;flex-direction:column}
+#lightbox.active{display:flex}
+#lightbox img{max-width:90%;max-height:80vh;object-fit:contain;border-radius:8px}
+#lightbox .lb-close{position:absolute;top:20px;right:20px;font-size:2em;color:#fff;cursor:pointer;z-index:1001}
+#lightbox .lb-prev,#lightbox .lb-next{position:absolute;top:50%;transform:translateY(-50%);font-size:2em;color:#fff;cursor:pointer;padding:20px;user-select:none}
+#lightbox .lb-prev{left:10px}
+#lightbox .lb-next{right:10px}
+#lightbox .lb-info{position:absolute;bottom:20px;color:#fff;font-size:0.9em}
 </style>
 </head>
 <body>
 
 <div class="cover" id="cover">
-  <h1>🌸 将将的成长相册</h1>
-  <div class="subtitle">母亲节特辑 · 爱意满满</div>
-  <div class="ages" id="coverAges"></div>
-  <div class="scroll-hint">↓ 向下滑动浏览 ↓</div>
+<h1>❤<br>将将的成长相册</h1>
+<div class="subtitle">母亲节特辑 · 2026</div>
+<div class="scroll-hint">↓ 向下滑动浏览照片 ↓</div>
 </div>
 
 <div class="nav-bar" id="navBar"></div>
+
 <div id="albumContent"></div>
 
-<div class="lightbox" id="lightbox">
-  <div class="close-btn" onclick="closeLightbox()">✕</div>
-  <div class="theme-tag" id="lbTheme"></div>
-  <div class="nav-left" onclick="navigate(-1)">‹</div>
-  <img id="lbImg" src="" alt="">
-  <div class="nav-right" onclick="navigate(1)">›</div>
-  <div class="info" id="lbInfo"></div>
+<div id="lightbox">
+<div class="lb-close" onclick="closeLightbox()">×</div>
+<div class="lb-prev" onclick="navigate(-1)">‹</div>
+<div class="lb-next" onclick="navigate(1)">›</div>
+<img id="lbImg" src="" alt="照片">
+<div class="lb-info">
+<span id="lbTheme"></span> · <span id="lbInfo"></span>
 </div>
-
-<div class="footer">
-  <p>❤️ 送给最亲爱的妈妈 ❤️</p>
-  <p style="margin-top:8px">将将 · 2023.05 — 2026.05</p>
 </div>
 
 <script>
-// === 数据（由 Python 生成）===
 const MARKS = {
   "total": 172,
   "byTheme": {
@@ -264,138 +249,105 @@ const MARKS = {
   }
 };
 
-const THEME_META = {
-  "birth": {
-    "name": "👶 新生儿时光",
-    "desc": "刚来到这个世界的小将将"
-  },
-  "birthday1": {
-    "name": "🎂 一周岁生日",
-    "desc": "2024年4月，第一次生日庆典"
-  },
-  "birthday2": {
-    "name": "🎉 两周岁生日",
-    "desc": "2025年4月，两岁的小可爱"
-  },
-  "birthday3": {
-    "name": "🎈 三周岁生日",
-    "desc": "2026年4月，三岁的将将"
-  },
-  "mothersday": {
-    "name": "💐 母子情深",
-    "desc": "和妈妈在一起的温暖时光"
-  },
-  "milestones": {
-    "name": "🌟 成长里程碑",
-    "desc": "每一个重要的第一次"
-  },
-  "daily": {
-    "name": "🏠 日常点滴",
-    "desc": "平凡却珍贵的每一天"
-  }
+const THEME_NAMES = {
+  'birth': '新生儿时期',
+  'birthday1': '周岁生日',
+  'birthday2': '两岁生日',
+  'birthday3': '三岁生日',
+  'mothersday': '母子情深',
+  'milestones': '成长里程碑',
+  'daily': '日常点滴'
 };
 
-// === 渲染封面 ===
-function renderCover(){
-  const el=document.getElementById('coverAges');
-  let h='';
-  for(const[key,meta] of Object.entries(THEME_META)){
-    const cnt=(MARKS.byTheme[key]||[]).length;
-    h+=`<div class="age-tag">${meta.name} (${cnt}张)</div>`;
+function renderNav() {
+  const nav = document.getElementById('navBar');
+  let h = '<button class="nav-btn" onclick="scrollToTheme(\'all\')">全部</button>';
+  for (const [key, photos] of Object.entries(MARKS.byTheme)) {
+    if (photos.length === 0) continue;
+    h += `<button class="nav-btn" onclick="scrollToTheme(\'${key}\')">${THEME_NAMES[key] || key} <span class="count">${photos.length}</span></button>`;
   }
-  el.innerHTML=h;
+  nav.innerHTML = h;
 }
 
-// === 渲染导航 ===
-function renderNav(){
-  const bar=document.getElementById('navBar');
-  let h='<div class="nav-btn active" onclick="scrollToTheme(\\'all\\')">📷 全部 ('+MARKS.total+')</div>';
-  for(const[key,meta] of Object.entries(THEME_META)){
-    const cnt=(MARKS.byTheme[key]||[]).length;
-    h+=`<div class="nav-btn" onclick="scrollToTheme('${key}')">${meta.name.replace(/^. /,'')} <span class="count">${cnt}</span></div>`;
-  }
-  bar.innerHTML=h;
-}
-
-// === 渲染相册 ===
-function renderAlbum(){
-  const c=document.getElementById('albumContent');
-  let h='';
-  for(const[key,meta] of Object.entries(THEME_META)){
-    const photos=MARKS.byTheme[key]||[];
-    if(!photos.length)continue;
-    h+=`<div class="theme-section" id="sec-'+key+'">`;
-    h+=`<div class="theme-title">${meta.name}</div>`;
-    h+=`<div class="theme-desc">${meta.desc} · 共${photos.length}张</div>`;
-    h+=`<div class="photo-grid">`;
-    photos.forEach(function(p,i){
-      h+=`<div class="photo-item" onclick="openLightbox('${key}',${i})"><img src="${p}" loading="lazy" alt="照片"></div>`;
+function renderAlbum() {
+  const c = document.getElementById('albumContent');
+  let h = '';
+  for (const [key, photos] of Object.entries(MARKS.byTheme)) {
+    if (photos.length === 0) continue;
+    h += `<div class="theme-section" id="sec-${key}">`;
+    h += `<div class="theme-title">${THEME_NAMES[key] || key} (${photos.length}张)</div>`;
+    h += `<div class="photo-grid">`;
+    photos.forEach(function(p, i) {
+      h += `<div class="photo-item" onclick="openLightbox('${key}', ${i})"><img src="${p}" loading="lazy" alt="照片"></div>`;
     });
-    h+=`</div></div>`;
+    h += `</div></div>`;
   }
-  c.innerHTML=h;
+  c.innerHTML = h;
 }
 
-// === 灯箱 ===
-let curTheme='', curIdx=0;
+let curTheme = '', curIdx = 0;
 
-function openLightbox(theme,idx){
-  curTheme=theme; curIdx=idx;
+function openLightbox(theme, idx) {
+  curTheme = theme; curIdx = idx;
   showImg();
   document.getElementById('lightbox').classList.add('active');
-  document.body.style.overflow='hidden';
+  document.body.style.overflow = 'hidden';
 }
-function closeLightbox(){
+
+function closeLightbox() {
   document.getElementById('lightbox').classList.remove('active');
-  document.body.style.overflow='';
+  document.body.style.overflow = '';
 }
-function showImg(){
-  const photos=MARKS.byTheme[curTheme];
-  if(!photos||curIdx<0||curIdx>=photos.length)return;
-  const meta=THEME_META[curTheme];
-  document.getElementById('lbTheme').textContent=meta.name;
-  document.getElementById('lbImg').src=photos[curIdx];
-  document.getElementById('lbInfo').innerHTML='<div>'+(curIdx+1)+'/'+photos.length+'</div>';
+
+function showImg() {
+  const photos = MARKS.byTheme[curTheme];
+  if (!photos || curIdx < 0 || curIdx >= photos.length) return;
+  document.getElementById('lbTheme').textContent = THEME_NAMES[curTheme];
+  document.getElementById('lbImg').src = photos[curIdx];
+  document.getElementById('lbInfo').innerHTML = (curIdx+1) + '/' + photos.length;
 }
-function navigate(dir){
-  const photos=MARKS.byTheme[curTheme];
-  if(!photos)return;
-  curIdx+=dir;
-  if(curIdx<0)curIdx=photos.length-1;
-  if(curIdx>=photos.length)curIdx=0;
+
+function navigate(dir) {
+  const photos = MARKS.byTheme[curTheme];
+  if (!photos) return;
+  curIdx += dir;
+  if (curIdx < 0) curIdx = photos.length - 1;
+  if (curIdx >= photos.length) curIdx = 0;
   showImg();
 }
 
-// === 触控 ===
-let tx=0;
-document.getElementById('lightbox').addEventListener('touchstart',function(e){tx=e.changedTouches[0].screenX;});
-document.getElementById('lightbox').addEventListener('touchend',function(e){
-  const dx=e.changedTouches[0].screenX-tx;
-  if(Math.abs(dx)>50)navigate(dx>0?-1:1);
+// 触控滑动
+let tx = 0;
+document.getElementById('lightbox').addEventListener('touchstart', function(e) {
+  tx = e.changedTouches[0].screenX;
+});
+document.getElementById('lightbox').addEventListener('touchend', function(e) {
+  const dx = e.changedTouches[0].screenX - tx;
+  if (Math.abs(dx) > 50) navigate(dx > 0 ? -1 : 1);
 });
 
-document.addEventListener('keydown',function(e){
-  const lb=document.getElementById('lightbox');
-  if(!lb.classList.contains('active'))return;
-  if(e.key==='ArrowLeft')navigate(-1);
-  if(e.key==='ArrowRight')navigate(1);
-  if(e.key==='Escape')closeLightbox();
+document.addEventListener('keydown', function(e) {
+  const lb = document.getElementById('lightbox');
+  if (!lb.classList.contains('active')) return;
+  if (e.key === 'ArrowLeft') navigate(-1);
+  if (e.key === 'ArrowRight') navigate(1);
+  if (e.key === 'Escape') closeLightbox();
 });
 
-function scrollToTheme(theme){
-  document.querySelectorAll('.nav-btn').forEach(function(b){b.classList.remove('active');});
+function scrollToTheme(theme) {
+  document.querySelectorAll('.nav-btn').forEach(function(b) { b.classList.remove('active'); });
   event.target.classList.add('active');
-  if(theme==='all'){
+  if (theme === 'all') {
     document.getElementById('cover').scrollIntoView({behavior:'smooth'});
-  }else{
-    const el=document.getElementById('sec-'+theme);
-    if(el)el.scrollIntoView({behavior:'smooth',block:'start'});
+  } else {
+    const el = document.getElementById('sec-' + theme);
+    if (el) el.scrollIntoView({behavior:'smooth', block:'start'});
   }
 }
 
-renderCover();
 renderNav();
 renderAlbum();
 </script>
+
 </body>
 </html>
