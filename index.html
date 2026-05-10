@@ -3,21 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>将将的成长相册 - 母亲节特别版</title>
+    <title>将将的成长相册</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
-        
+
         body {
-            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
-            background: #0a0a0a;
+            font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
             color: #fff;
             overflow-x: hidden;
+            min-height: 100vh;
+            -webkit-overflow-scrolling: touch;
         }
-        
+
         /* 开场动画 */
         #intro {
             position: fixed;
@@ -25,502 +28,606 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(ellipse at center, #1a1a2e 0%, #0a0a0a 100%);
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            z-index: 1000;
-            cursor: pointer;
+            z-index: 9999;
+            animation: introFadeOut 0.5s ease-in-out 3.5s forwards;
         }
-        
-        .intro-text {
-            font-size: 3rem;
-            color: #fff;
-            opacity: 0;
-            animation: fadeInOut 4s ease-in-out forwards;
+
+        @keyframes introFadeOut {
+            to {
+                opacity: 0;
+                pointer-events: none;
+            }
+        }
+
+        .intro-title {
+            font-size: 2.5rem;
+            background: linear-gradient(45deg, #FFB6C1, #FF69B4, #FF1493);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: titleFloat 2s ease-in-out;
             text-align: center;
-            padding: 20px;
-            font-weight: 300;
-            letter-spacing: 5px;
+            padding: 0 1rem;
         }
-        
-        .intro-subtext {
-            font-size: 1.5rem;
-            color: #FFB6C1;
-            opacity: 0;
-            animation: fadeIn 2s ease-in-out 4s forwards;
-            text-align: center;
-            margin-top: 20px;
-            font-weight: 300;
-            letter-spacing: 3px;
+
+        @keyframes titleFloat {
+            0% {
+                opacity: 0;
+                transform: translateY(30px) scale(0.8);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
         }
-        
-        .enter-btn {
-            margin-top: 50px;
-            padding: 15px 40px;
+
+        .intro-subtitle {
             font-size: 1.2rem;
-            background: transparent;
-            border: 1px solid #FFB6C1;
-            color: #FFB6C1;
-            border-radius: 30px;
-            cursor: pointer;
+            color: rgba(255, 255, 255, 0.8);
+            animation: subtitleFade 1.5s ease-in-out 1s forwards;
             opacity: 0;
-            animation: fadeIn 2s ease-in-out 6s forwards;
-            transition: all 0.3s;
-            letter-spacing: 2px;
+            text-align: center;
+            margin: 1.5rem 1rem;
         }
-        
-        .enter-btn:hover {
-            background: #FFB6C1;
-            color: #0a0a0a;
+
+        @keyframes subtitleFade {
+            to {
+                opacity: 1;
+            }
         }
-        
-        @keyframes fadeInOut {
-            0% { opacity: 0; transform: scale(0.8); }
-            20% { opacity: 1; transform: scale(1); }
-            80% { opacity: 1; transform: scale(1); }
-            100% { opacity: 0; transform: scale(1.2); }
+
+        .intro-btn {
+            padding: 0.8rem 2.5rem;
+            font-size: 1.1rem;
+            background: linear-gradient(45deg, #FFB6C1, #FF69B4);
+            border: none;
+            border-radius: 25px;
+            color: white;
+            cursor: pointer;
+            animation: btnFade 1.5s ease-in-out 2s forwards;
+            opacity: 0;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 105, 180, 0.4);
+            -webkit-tap-highlight-color: transparent;
         }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+
+        .intro-btn:active {
+            transform: scale(0.95);
         }
-        
-        /* 主界面 */
-        #main {
+
+        /* 主容器 */
+        #main-container {
             display: none;
-            min-height: 100vh;
-            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+            opacity: 0;
         }
-        
-        .header {
+
+        #main-container.show {
+            display: block;
+            animation: mainFadeIn 0.5s ease-in-out forwards;
+        }
+
+        @keyframes mainFadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* 顶部导航栏 - 手机优化 */
+        .top-nav {
             position: fixed;
             top: 0;
             left: 0;
-            right: 0;
-            padding: 20px;
+            width: 100%;
             background: rgba(10, 10, 10, 0.95);
             backdrop-filter: blur(10px);
-            z-index: 100;
-            text-align: center;
-            border-bottom: 1px solid rgba(255, 182, 193, 0.2);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 0.8rem 1rem;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
-        
-        .header h1 {
-            font-size: 2rem;
+
+        .top-nav-title {
+            font-size: 1.2rem;
+            font-weight: bold;
             background: linear-gradient(45deg, #FFB6C1, #FF69B4);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            font-weight: 300;
-            letter-spacing: 3px;
         }
-        
-        .theme-nav {
+
+        .menu-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* 侧边菜单 - 手机优化 */
+        .side-menu {
             position: fixed;
-            left: 0;
-            top: 80px;
-            bottom: 0;
-            width: 220px;
-            padding: 20px;
-            background: rgba(10, 10, 10, 0.9);
+            top: 0;
+            left: -100%;
+            width: 80%;
+            max-width: 300px;
+            height: 100%;
+            background: rgba(26, 26, 46, 0.98);
             backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 2rem 1rem;
+            z-index: 1001;
+            transition: left 0.3s ease;
             overflow-y: auto;
-            z-index: 99;
-            border-right: 1px solid rgba(255, 182, 193, 0.1);
+            -webkit-overflow-scrolling: touch;
         }
-        
-        .theme-item {
-            padding: 15px;
-            margin: 10px 0;
+
+        .side-menu.open {
+            left: 0;
+        }
+
+        .side-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            display: none;
+        }
+
+        .side-menu-overlay.open {
+            display: block;
+        }
+
+        .menu-item {
+            padding: 0.8rem 1rem;
+            margin: 0.3rem 0;
             border-radius: 10px;
             cursor: pointer;
-            transition: all 0.3s;
-            border: 1px solid transparent;
-        }
-        
-        .theme-item:hover {
-            background: rgba(255, 182, 193, 0.1);
-            border-color: rgba(255, 182, 193, 0.3);
-        }
-        
-        .theme-item.active {
-            background: rgba(255, 182, 193, 0.15);
-            border-color: #FFB6C1;
-        }
-        
-        .theme-icon {
-            font-size: 1.5rem;
-            margin-right: 10px;
-        }
-        
-        .theme-name {
+            transition: all 0.3s ease;
             font-size: 1rem;
-            color: #fff;
-            font-weight: 300;
+            -webkit-tap-highlight-color: transparent;
         }
-        
-        .theme-count {
-            font-size: 0.8rem;
-            color: #888;
-            margin-top: 5px;
+
+        .menu-item:active {
+            background: rgba(255, 255, 255, 0.2);
         }
-        
-        /* 照片墙 */
-        .photo-wall {
-            margin-left: 220px;
-            margin-top: 80px;
-            padding: 30px;
-            column-count: 3;
-            column-gap: 20px;
+
+        .menu-item.active {
+            background: linear-gradient(45deg, rgba(255, 182, 193, 0.3), rgba(255, 105, 180, 0.3));
+            border-left: 3px solid #FF69B4;
         }
-        
-        @media (max-width: 1024px) {
-            .photo-wall {
-                column-count: 2;
-            }
+
+        /* 主内容区 */
+        .main-content {
+            margin-top: 60px;
+            padding: 1rem;
         }
-        
-        @media (max-width: 768px) {
-            .theme-nav {
-                display: none;
-            }
-            .photo-wall {
-                margin-left: 0;
-                column-count: 2;
-                padding: 15px;
-            }
+
+        .theme-section {
+            margin-bottom: 3rem;
         }
-        
-        .photo-item {
-            break-inside: avoid;
-            margin-bottom: 20px;
-            border-radius: 15px;
-            overflow: hidden;
-            cursor: pointer;
-            position: relative;
-            background: #1a1a1a;
-            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        }
-        
-        .photo-item:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 15px 40px rgba(255, 182, 193, 0.2);
-        }
-        
-        .photo-item img {
-            width: 100%;
-            display: block;
-            transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        }
-        
-        .photo-item:hover img {
-            transform: scale(1.08);
-        }
-        
-        .photo-theme {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            padding: 15px;
-            background: linear-gradient(transparent, rgba(0,0,0,0.9));
-            color: #fff;
-            font-size: 0.9rem;
-            font-weight: 300;
-            letter-spacing: 1px;
-        }
-        
-        /* 主题分隔 */
-        .theme-separator {
-            column-span: all;
+
+        .theme-header {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
             text-align: center;
-            padding: 60px 20px;
-            margin: 40px 0;
-        }
-        
-        .theme-separator h2 {
-            font-size: 2.5rem;
             background: linear-gradient(45deg, #FFB6C1, #FF69B4);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            font-weight: 300;
-            letter-spacing: 5px;
-            margin-bottom: 15px;
-        }
-        
-        .theme-separator p {
-            color: #888;
-            font-size: 1rem;
-            font-weight: 300;
             letter-spacing: 2px;
         }
-        
-        /* 照片查看器 */
+
+        /* 照片网格 - 手机2列 */
+        .photo-grid {
+            columns: 2;
+            column-gap: 10px;
+        }
+
+        .photo-card {
+            break-inside: avoid;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.05);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .photo-card:active {
+            transform: scale(0.98);
+        }
+
+        .photo-card img {
+            width: 100%;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+
+        /* 照片查看器 - 手机优化 */
         #viewer {
+            display: none;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.98);
-            z-index: 2000;
-            display: none;
+            z-index: 10002;
             justify-content: center;
             align-items: center;
-            cursor: pointer;
         }
-        
+
         #viewer.show {
             display: flex;
         }
-        
+
         #viewer img {
-            max-width: 90%;
+            max-width: 95%;
             max-height: 90%;
+            border-radius: 5px;
+            box-shadow: 0 10px 50px rgba(255, 105, 180, 0.3);
+            animation: imgZoomIn 0.3s ease;
             object-fit: contain;
-            border-radius: 10px;
-            animation: zoomIn 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
         }
-        
-        @keyframes zoomIn {
-            from { transform: scale(0.5); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
+
+        @keyframes imgZoomIn {
+            from {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
         }
-        
-        .viewer-close {
+
+        .viewer-btn {
             position: absolute;
-            top: 30px;
-            right: 30px;
-            font-size: 2.5rem;
-            color: #fff;
-            cursor: pointer;
-            z-index: 2001;
-            transition: all 0.3s;
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            -webkit-tap-highlight-color: transparent;
         }
-        
-        .viewer-close:hover {
-            background: rgba(255, 182, 193, 0.3);
-            transform: rotate(90deg);
+
+        .viewer-btn:active {
+            transform: scale(0.9);
         }
-        
-        .viewer-nav {
-            position: absolute;
+
+        #prev-btn {
+            left: 15px;
             top: 50%;
             transform: translateY(-50%);
-            font-size: 3rem;
-            color: #fff;
-            cursor: pointer;
-            padding: 20px;
-            z-index: 2001;
-            user-select: none;
-            transition: all 0.3s;
-            background: rgba(255, 255, 255, 0.05);
+        }
+
+        #next-btn {
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        #close-btn {
+            top: 15px;
+            right: 15px;
+        }
+
+        /* 音乐控制器 - 手机优化 */
+        #music-controller {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 10003;
+        }
+
+        #music-btn {
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            background: linear-gradient(135deg, #FFB6C1, #FF69B4);
+            border: none;
+            color: white;
+            font-size: 1.3rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 105, 180, 0.4);
+            transition: all 0.3s ease;
+            -webkit-tap-highlight-color: transparent;
         }
-        
-        .viewer-nav:hover {
-            background: rgba(255, 182, 193, 0.2);
+
+        #music-btn:active {
+            transform: scale(0.9);
         }
-        
-        .viewer-prev {
-            left: 30px;
+
+        .music-on {
+            animation: musicRotate 3s linear infinite;
         }
-        
-        .viewer-next {
-            right: 30px;
+
+        @keyframes musicRotate {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
         }
-        
-        .viewer-info {
-            position: absolute;
-            bottom: 40px;
-            left: 0;
-            right: 0;
-            text-align: center;
-            color: #fff;
-            font-size: 1.1rem;
-            z-index: 2001;
-            font-weight: 300;
-            letter-spacing: 2px;
+
+        /* 滚动条 */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #FFB6C1, #FF69B4);
+            border-radius: 2px;
+        }
+
+        /* 平板和桌面适配 */
+        @media (min-width: 768px) {
+            .photo-grid {
+                columns: 3;
+                column-gap: 15px;
+            }
+
+            .photo-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 25px rgba(255, 105, 180, 0.3);
+            }
+
+            .photo-card:hover img {
+                transform: scale(1.05);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .photo-grid {
+                columns: 4;
+            }
         }
     </style>
 </head>
 <body>
     <!-- 开场动画 -->
-    <div id="intro" onclick="enterAlbum()">
-        <div class="intro-text">将将的成长相册</div>
-        <div class="intro-subtext">每一个瞬间，都是永恒的记忆</div>
-        <button class="enter-btn" onclick="event.stopPropagation(); enterAlbum();">开启记忆之旅</button>
+    <div id="intro">
+        <h1 class="intro-title">将将的成长相册</h1>
+        <p class="intro-subtitle">每一个瞬间，都是永恒的记忆</p>
+        <button class="intro-btn" onclick="enterAlbum()">🎵 开启记忆之旅</button>
     </div>
-    
-    <!-- 主界面 -->
-    <div id="main">
-        <div class="header">
-            <h1>&#10084;&#65039; 将将的成长相册 &#10084;&#65039;</h1>
+
+    <!-- 主容器 -->
+    <div id="main-container">
+        <!-- 顶部导航 -->
+        <div class="top-nav">
+            <div class="top-nav-title">📷 相册导航</div>
+            <button class="menu-btn" onclick="toggleMenu()">☰</button>
         </div>
-        
-        <div class="theme-nav" id="themeNav"></div>
-        
-        <div class="photo-wall" id="photoWall"></div>
+
+        <!-- 侧边菜单 -->
+        <div class="side-menu-overlay" onclick="toggleMenu()"></div>
+        <div class="side-menu" id="side-menu">
+            <div class="menu-item active" onclick="scrollToTheme(-1)">🌟 全部照片</div>
+        </div>
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <!-- 动态生成照片内容 -->
+        </main>
     </div>
-    
+
     <!-- 照片查看器 -->
-    <div id="viewer" onclick="closeViewer()">
-        <div class="viewer-close" onclick="event.stopPropagation(); closeViewer();">&times;</div>
-        <div class="viewer-nav viewer-prev" onclick="event.stopPropagation(); navigateViewer(-1);">&#10094;</div>
-        <div class="viewer-nav viewer-next" onclick="event.stopPropagation(); navigateViewer(1);">&#10095;</div>
-        <img id="viewerImg" src="" alt="" onclick="event.stopPropagation();">
-        <div class="viewer-info" id="viewerInfo"></div>
+    <div id="viewer">
+        <button id="close-btn" class="viewer-btn" onclick="closeViewer()">✕</button>
+        <button id="prev-btn" class="viewer-btn" onclick="prevPhoto()">‹</button>
+        <button id="next-btn" class="viewer-btn" onclick="nextPhoto()">›</button>
+        <img id="viewer-img" src="" alt="照片">
     </div>
-    
+
+    <!-- 音乐控制器 -->
+    <div id="music-controller">
+        <button id="music-btn" onclick="toggleMusic()">🎵</button>
+    </div>
+
+    <!-- 背景音乐 -->
+    <audio id="bg-music" loop>
+        <source src="https://cdn.pixabay.com/audio/2024/11/04/audio_344e8f7f78.mp3" type="audio/mpeg">
+    </audio>
+
     <script>
-        const PHOTOS_BY_THEME = {"birth": [{"theme": "birth", "filename": "2023-05-02-847532.jpg", "path": "photos/birth/2023-05-02-847532.jpg", "name": "初临人世", "icon": "&#128118;"}, {"theme": "birth", "filename": "2023-05-08-282448.jpg", "path": "photos/birth/2023-05-08-282448.jpg", "name": "初临人世", "icon": "&#128118;"}, {"theme": "birth", "filename": "2023-05-14-172123.jpg", "path": "photos/birth/2023-05-14-172123.jpg", "name": "初临人世", "icon": "&#128118;"}, {"theme": "birth", "filename": "2023-05-23-326540.jpg", "path": "photos/birth/2023-05-23-326540.jpg", "name": "初临人世", "icon": "&#128118;"}, {"theme": "birth", "filename": "2023-05-26-300323.jpg", "path": "photos/birth/2023-05-26-300323.jpg", "name": "初临人世", "icon": "&#128118;"}, {"theme": "birth", "filename": "2023-05-28-542939.jpg", "path": "photos/birth/2023-05-28-542939.jpg", "name": "初临人世", "icon": "&#128118;"}, {"theme": "birth", "filename": "2023-05-28-543849.jpg", "path": "photos/birth/2023-05-28-543849.jpg", "name": "初临人世", "icon": "&#128118;"}, {"theme": "birth", "filename": "2023-05-28-554696.jpg", "path": "photos/birth/2023-05-28-554696.jpg", "name": "初临人世", "icon": "&#128118;"}, {"theme": "birth", "filename": "2023-05-28-566471.jpg", "path": "photos/birth/2023-05-28-566471.jpg", "name": "初临人世", "icon": "&#128118;"}, {"theme": "birth", "filename": "2023-05-28-578028.jpg", "path": "photos/birth/2023-05-28-578028.jpg", "name": "初临人世", "icon": "&#128118;"}, {"theme": "birth", "filename": "2023-06-04-693532.jpg", "path": "photos/birth/2023-06-04-693532.jpg", "name": "初临人世", "icon": "&#128118;"}, {"theme": "birth", "filename": "2023-06-06-821672.jpg", "path": "photos/birth/2023-06-06-821672.jpg", "name": "初临人世", "icon": "&#128118;"}, {"theme": "birth", "filename": "2023-06-15-308223.jpg", "path": "photos/birth/2023-06-15-308223.jpg", "name": "初临人世", "icon": "&#128118;"}, {"theme": "birth", "filename": "2023-06-25-604374.jpg", "path": "photos/birth/2023-06-25-604374.jpg", "name": "初临人世", "icon": "&#128118;"}, {"theme": "birth", "filename": "2023-06-30-811185.jpg", "path": "photos/birth/2023-06-30-811185.jpg", "name": "初临人世", "icon": "&#128118;"}], "birthday1": [{"theme": "birthday1", "filename": "2024-04-18-692616.jpg", "path": "photos/birthday1/2024-04-18-692616.jpg", "name": "周岁庆典", "icon": "&#127874;"}, {"theme": "birthday1", "filename": "2024-04-18-710121.jpg", "path": "photos/birthday1/2024-04-18-710121.jpg", "name": "周岁庆典", "icon": "&#127874;"}, {"theme": "birthday1", "filename": "2024-04-18-680864.jpg", "path": "photos/birthday1/2024-04-18-680864.jpg", "name": "周岁庆典", "icon": "&#127874;"}, {"theme": "birthday1", "filename": "2024-04-18-691543.jpg", "path": "photos/birthday1/2024-04-18-691543.jpg", "name": "周岁庆典", "icon": "&#127874;"}], "birthday2": [{"theme": "birthday2", "filename": "2025-04-07-810703.jpg", "path": "photos/birthday2/2025-04-07-810703.jpg", "name": "两岁成长", "icon": "&#127880;"}, {"theme": "birthday2", "filename": "2025-04-09-797329.jpg", "path": "photos/birthday2/2025-04-09-797329.jpg", "name": "两岁成长", "icon": "&#127880;"}, {"theme": "birthday2", "filename": "2025-04-09-797330.jpg", "path": "photos/birthday2/2025-04-09-797330.jpg", "name": "两岁成长", "icon": "&#127880;"}, {"theme": "birthday2", "filename": "08aa64e9-76b6-4957-bc2b-e137f1268b91.png", "path": "photos/birthday2/08aa64e9-76b6-4957-bc2b-e137f1268b91.png", "name": "两岁成长", "icon": "&#127880;"}, {"theme": "birthday2", "filename": "2025-04-17-657506.jpg", "path": "photos/birthday2/2025-04-17-657506.jpg", "name": "两岁成长", "icon": "&#127880;"}, {"theme": "birthday2", "filename": "2025-04-07-806764.jpg", "path": "photos/birthday2/2025-04-07-806764.jpg", "name": "两岁成长", "icon": "&#127880;"}], "birthday3": [{"theme": "birthday3", "filename": "2026-04-25-092458.jpg", "path": "photos/birthday3/2026-04-25-092458.jpg", "name": "三岁快乐", "icon": "&#127536;"}, {"theme": "birthday3", "filename": "2026-04-26-099428.jpg", "path": "photos/birthday3/2026-04-26-099428.jpg", "name": "三岁快乐", "icon": "&#127536;"}, {"theme": "birthday3", "filename": "2026-04-26-132059.jpg", "path": "photos/birthday3/2026-04-26-132059.jpg", "name": "三岁快乐", "icon": "&#127536;"}, {"theme": "birthday3", "filename": "2026-04-26-551047.jpg", "path": "photos/birthday3/2026-04-26-551047.jpg", "name": "三岁快乐", "icon": "&#127536;"}], "mothersday": [{"theme": "mothersday", "filename": "2023-07-16-327740.jpg", "path": "photos/mothersday/2023-07-16-327740.jpg", "name": "母子情深", "icon": "&#10084;&#65039;"}, {"theme": "mothersday", "filename": "2023-09-09-959872.jpg", "path": "photos/mothersday/2023-09-09-959872.jpg", "name": "母子情深", "icon": "&#10084;&#65039;"}, {"theme": "mothersday", "filename": "2023-09-09-974423.jpg", "path": "photos/mothersday/2023-09-09-974423.jpg", "name": "母子情深", "icon": "&#10084;&#65039;"}, {"theme": "mothersday", "filename": "2023-09-29-778057.jpg", "path": "photos/mothersday/2023-09-29-778057.jpg", "name": "母子情深", "icon": "&#10084;&#65039;"}, {"theme": "mothersday", "filename": "2023-10-14-152209.jpg", "path": "photos/mothersday/2023-10-14-152209.jpg", "name": "母子情深", "icon": "&#10084;&#65039;"}, {"theme": "mothersday", "filename": "2023-11-17-233721.jpg", "path": "photos/mothersday/2023-11-17-233721.jpg", "name": "母子情深", "icon": "&#10084;&#65039;"}, {"theme": "mothersday", "filename": "2023-12-02-661816.jpg", "path": "photos/mothersday/2023-12-02-661816.jpg", "name": "母子情深", "icon": "&#10084;&#65039;"}, {"theme": "mothersday", "filename": "2023-12-12-011797.jpg", "path": "photos/mothersday/2023-12-12-011797.jpg", "name": "母子情深", "icon": "&#10084;&#65039;"}, {"theme": "mothersday", "filename": "2024-02-11-358188.jpg", "path": "photos/mothersday/2024-02-11-358188.jpg", "name": "母子情深", "icon": "&#10084;&#65039;"}, {"theme": "mothersday", "filename": "2024-02-16-899585.jpg", "path": "photos/mothersday/2024-02-16-899585.jpg", "name": "母子情深", "icon": "&#10084;&#65039;"}, {"theme": "mothersday", "filename": "2024-02-16-900613.jpg", "path": "photos/mothersday/2024-02-16-900613.jpg", "name": "母子情深", "icon": "&#10084;&#65039;"}, {"theme": "mothersday", "filename": "2024-02-20-746809.jpg", "path": "photos/mothersday/2024-02-20-746809.jpg", "name": "母子情深", "icon": "&#10084;&#65039;"}, {"theme": "mothersday", "filename": "2024-03-11-580529.jpg", "path": "photos/mothersday/2024-03-11-580529.jpg", "name": "母子情深", "icon": "&#10084;&#65039;"}, {"theme": "mothersday", "filename": "2024-03-15-730585.jpg", "path": "photos/mothersday/2024-03-15-730585.jpg", "name": "母子情深", "icon": "&#10084;&#65039;"}, {"theme": "mothersday", "filename": "2024-05-13-604879.jpg", "path": "photos/mothersday/2024-05-13-604879.jpg", "name": "母子情深", "icon": "&#10084;&#65039;"}, {"theme": "mothersday", "filename": "2024-05-15-821031.jpg", "path": "photos/mothersday/2024-05-15-821031.jpg", "name": "母子情深", "icon": "&#10084;&#65039;"}, {"theme": "mothersday", "filename": "2024-08-13-116536.jpg", "path": "photos/mothersday/2024-08-13-116536.jpg", "name": "母子情深", "icon": "&#10084;&#65039;"}, {"theme": "mothersday", "filename": "2024-08-16-882175.jpg", "path": "photos/mothersday/2024-08-16-882175.jpg", "name": "母子情深", "icon": "&#10084;&#65039;"}, {"theme": "mothersday", "filename": "2024-08-13-101660.jpg", "path": "photos/mothersday/2024-08-13-101660.jpg", "name": "母子情深", "icon": "&#10084;&#65039;"}, {"theme": "mothersday", "filename": "2024-09-14-046894.jpg", "path": "photos/mothersday/2024-09-14-046894.jpg", "name": "母子情深", "icon": "&#10084;&#65039;"}, {"theme": "mothersday", "filename": "2024-10-21-243795.jpg", "path": "photos/mothersday/2024-10-21-243795.jpg", "name": "母子情深", "icon": "&#10084;&#65039;"}, {"theme": "mothersday", "filename": "2024-11-14-439957.jpg", "path": "photos/mothersday/2024-11-14-439957.jpg", "name": "母子情深", "icon": "&#10084;&#65039;"}, {"theme": "mothersday", "filename": "2024-11-18-427732.jpg", "path": "photos/mothersday/2024-11-18-427732.jpg", "name": "母子情深", "icon": "&#10084;&#65039;"}, {"theme": "mothersday", "filename": "2025-02-21-067056.jpg", "path": "photos/mothersday/2025-02-21-067056.jpg", "name": "母子情深", "icon": "&#10084;&#65039;"}, {"theme": "mothersday", "filename": "2025-02-23-056850.jpg", "path": "photos/mothersday/2025-02-23-056850.jpg", "name": "母子情深", "icon": "&#10084;&#65039;"}, {"theme": "mothersday", "filename": "2025-02-23-108144.jpg", "path": "photos/mothersday/2025-02-23-108144.jpg", "name": "母子情深", "icon": "&#10084;&#65039;"}, {"theme": "mothersday", "filename": "2025-08-30-182903.jpg", "path": "photos/mothersday/2025-08-30-182903.jpg", "name": "母子情深", "icon": "&#10084;&#65039;"}, {"theme": "mothersday", "filename": "2025-09-02-405740.jpg", "path": "photos/mothersday/2025-09-02-405740.jpg", "name": "母子情深", "icon": "&#10084;&#65039;"}, {"theme": "mothersday", "filename": "2025-09-02-446033.jpg", "path": "photos/mothersday/2025-09-02-446033.jpg", "name": "母子情深", "icon": "&#10084;&#65039;"}, {"theme": "mothersday", "filename": "2025-10-01-868906.jpg", "path": "photos/mothersday/2025-10-01-868906.jpg", "name": "母子情深", "icon": "&#10084;&#65039;"}, {"theme": "mothersday", "filename": "2026-02-14-957770.jpg", "path": "photos/mothersday/2026-02-14-957770.jpg", "name": "母子情深", "icon": "&#10084;&#65039;"}, {"theme": "mothersday", "filename": "2026-02-17-116937.jpg", "path": "photos/mothersday/2026-02-17-116937.jpg", "name": "母子情深", "icon": "&#10084;&#65039;"}, {"theme": "mothersday", "filename": "2026-02-17-119965.jpg", "path": "photos/mothersday/2026-02-17-119965.jpg", "name": "母子情深", "icon": "&#10084;&#65039;"}, {"theme": "mothersday", "filename": "2026-02-17-154296.jpg", "path": "photos/mothersday/2026-02-17-154296.jpg", "name": "母子情深", "icon": "&#10084;&#65039;"}, {"theme": "mothersday", "filename": "2026-02-17-165023.jpg", "path": "photos/mothersday/2026-02-17-165023.jpg", "name": "母子情深", "icon": "&#10084;&#65039;"}], "milestones": [{"theme": "milestones", "filename": "2023-07-01-928202.jpg", "path": "photos/milestones/2023-07-01-928202.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2023-08-06-976803.jpg", "path": "photos/milestones/2023-08-06-976803.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2023-08-15-622249.jpg", "path": "photos/milestones/2023-08-15-622249.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2023-08-15-632046.jpg", "path": "photos/milestones/2023-08-15-632046.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2023-08-15-883330.jpg", "path": "photos/milestones/2023-08-15-883330.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2023-08-15-884554.jpg", "path": "photos/milestones/2023-08-15-884554.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2023-10-02-065973.jpg", "path": "photos/milestones/2023-10-02-065973.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2023-10-16-128202.jpg", "path": "photos/milestones/2023-10-16-128202.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2023-10-31-661478.jpg", "path": "photos/milestones/2023-10-31-661478.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2023-10-08-407443.jpg", "path": "photos/milestones/2023-10-08-407443.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2023-11-05-498562.jpg", "path": "photos/milestones/2023-11-05-498562.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2023-11-21-695643.jpg", "path": "photos/milestones/2023-11-21-695643.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2023-12-05-379974.jpg", "path": "photos/milestones/2023-12-05-379974.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2024-03-28-012151.jpg", "path": "photos/milestones/2024-03-28-012151.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2024-05-06-859823.jpg", "path": "photos/milestones/2024-05-06-859823.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2024-05-06-859874.jpg", "path": "photos/milestones/2024-05-06-859874.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2024-05-06-865641.jpg", "path": "photos/milestones/2024-05-06-865641.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2024-05-06-886003.jpg", "path": "photos/milestones/2024-05-06-886003.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2024-05-12-956143.jpg", "path": "photos/milestones/2024-05-12-956143.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2024-05-13-581739.jpg", "path": "photos/milestones/2024-05-13-581739.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2024-05-15-768903.jpg", "path": "photos/milestones/2024-05-15-768903.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2024-05-15-833053.jpg", "path": "photos/milestones/2024-05-15-833053.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2024-05-16-324621.jpg", "path": "photos/milestones/2024-05-16-324621.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2024-05-16-621072.jpg", "path": "photos/milestones/2024-05-16-621072.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2024-05-30-592887.jpg", "path": "photos/milestones/2024-05-30-592887.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2024-06-14-158614.jpg", "path": "photos/milestones/2024-06-14-158614.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2024-06-14-443811.jpg", "path": "photos/milestones/2024-06-14-443811.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2024-06-15-176091.jpg", "path": "photos/milestones/2024-06-15-176091.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2024-06-16-632819.jpg", "path": "photos/milestones/2024-06-16-632819.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2024-08-13-087727.jpg", "path": "photos/milestones/2024-08-13-087727.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2024-09-02-924967.jpg", "path": "photos/milestones/2024-09-02-924967.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2024-09-12-967864.jpg", "path": "photos/milestones/2024-09-12-967864.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2024-09-17-016555.jpg", "path": "photos/milestones/2024-09-17-016555.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2024-09-30-854791.jpg", "path": "photos/milestones/2024-09-30-854791.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2024-11-03-221045.jpg", "path": "photos/milestones/2024-11-03-221045.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2024-11-05-408392.jpg", "path": "photos/milestones/2024-11-05-408392.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2024-11-11-893070.jpg", "path": "photos/milestones/2024-11-11-893070.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2024-11-13-783130.jpg", "path": "photos/milestones/2024-11-13-783130.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2024-11-28-093724.jpg", "path": "photos/milestones/2024-11-28-093724.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2024-12-06-972871.jpg", "path": "photos/milestones/2024-12-06-972871.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2024-12-10-619368.jpg", "path": "photos/milestones/2024-12-10-619368.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2024-12-10-900884.jpg", "path": "photos/milestones/2024-12-10-900884.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2024-12-28-843288.jpg", "path": "photos/milestones/2024-12-28-843288.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2025-02-17-582917.jpg", "path": "photos/milestones/2025-02-17-582917.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2025-02-17-766456.jpg", "path": "photos/milestones/2025-02-17-766456.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2025-02-23-636382.jpg", "path": "photos/milestones/2025-02-23-636382.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2025-02-23-647167.jpg", "path": "photos/milestones/2025-02-23-647167.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2025-05-16-212751.jpg", "path": "photos/milestones/2025-05-16-212751.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2025-06-04-512440.jpg", "path": "photos/milestones/2025-06-04-512440.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2025-06-30-054663.jpg", "path": "photos/milestones/2025-06-30-054663.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2025-10-05-734511.jpg", "path": "photos/milestones/2025-10-05-734511.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2025-10-08-804700.jpg", "path": "photos/milestones/2025-10-08-804700.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2025-10-08-829518.jpg", "path": "photos/milestones/2025-10-08-829518.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2025-10-01-872847.jpg", "path": "photos/milestones/2025-10-01-872847.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2025-11-12-821958.jpg", "path": "photos/milestones/2025-11-12-821958.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2025-12-14-151624.jpg", "path": "photos/milestones/2025-12-14-151624.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2025-12-16-153404.jpg", "path": "photos/milestones/2025-12-16-153404.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2025-12-18-881465.jpg", "path": "photos/milestones/2025-12-18-881465.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2025-12-21-501970.jpg", "path": "photos/milestones/2025-12-21-501970.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2025-12-16-412857.jpg", "path": "photos/milestones/2025-12-16-412857.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2026-02-18-524046.jpg", "path": "photos/milestones/2026-02-18-524046.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2026-02-19-232772.jpg", "path": "photos/milestones/2026-02-19-232772.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2026-02-19-248601.jpg", "path": "photos/milestones/2026-02-19-248601.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2026-03-30-785270.jpg", "path": "photos/milestones/2026-03-30-785270.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2026-04-21-705239.jpg", "path": "photos/milestones/2026-04-21-705239.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2026-04-22-994617.jpg", "path": "photos/milestones/2026-04-22-994617.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2026-04-26-092570.jpg", "path": "photos/milestones/2026-04-26-092570.jpg", "name": "成长里程碑", "icon": "&#11088;"}, {"theme": "milestones", "filename": "2026-05-03-227642.jpg", "path": "photos/milestones/2026-05-03-227642.jpg", "name": "成长里程碑", "icon": "&#11088;"}], "daily": [{"theme": "daily", "filename": "2023-07-05-603399.jpg", "path": "photos/daily/2023-07-05-603399.jpg", "name": "日常点滴", "icon": "&#128247;"}, {"theme": "daily", "filename": "2023-07-09-264430.jpg", "path": "photos/daily/2023-07-09-264430.jpg", "name": "日常点滴", "icon": "&#128247;"}, {"theme": "daily", "filename": "2023-07-31-556470.jpg", "path": "photos/daily/2023-07-31-556470.jpg", "name": "日常点滴", "icon": "&#128247;"}, {"theme": "daily", "filename": "2023-07-08-308763.jpg", "path": "photos/daily/2023-07-08-308763.jpg", "name": "日常点滴", "icon": "&#128247;"}, {"theme": "daily", "filename": "2023-11-22-519342.jpg", "path": "photos/daily/2023-11-22-519342.jpg", "name": "日常点滴", "icon": "&#128247;"}, {"theme": "daily", "filename": "2023-11-28-661087.jpg", "path": "photos/daily/2023-11-28-661087.jpg", "name": "日常点滴", "icon": "&#128247;"}, {"theme": "daily", "filename": "2023-12-05-574354.jpg", "path": "photos/daily/2023-12-05-574354.jpg", "name": "日常点滴", "icon": "&#128247;"}, {"theme": "daily", "filename": "2023-12-25-519601.jpg", "path": "photos/daily/2023-12-25-519601.jpg", "name": "日常点滴", "icon": "&#128247;"}, {"theme": "daily", "filename": "2024-01-26-125549.jpg", "path": "photos/daily/2024-01-26-125549.jpg", "name": "日常点滴", "icon": "&#128247;"}, {"theme": "daily", "filename": "2024-02-22-500435.jpg", "path": "photos/daily/2024-02-22-500435.jpg", "name": "日常点滴", "icon": "&#128247;"}, {"theme": "daily", "filename": "2024-03-08-158493.jpg", "path": "photos/daily/2024-03-08-158493.jpg", "name": "日常点滴", "icon": "&#128247;"}, {"theme": "daily", "filename": "2024-03-09-361068.jpg", "path": "photos/daily/2024-03-09-361068.jpg", "name": "日常点滴", "icon": "&#128247;"}, {"theme": "daily", "filename": "2024-04-13-522695.jpg", "path": "photos/daily/2024-04-13-522695.jpg", "name": "日常点滴", "icon": "&#128247;"}, {"theme": "daily", "filename": "2024-05-17-060840.jpg", "path": "photos/daily/2024-05-17-060840.jpg", "name": "日常点滴", "icon": "&#128247;"}, {"theme": "daily", "filename": "2024-08-28-404517.jpg", "path": "photos/daily/2024-08-28-404517.jpg", "name": "日常点滴", "icon": "&#128247;"}, {"theme": "daily", "filename": "2024-10-01-821661.jpg", "path": "photos/daily/2024-10-01-821661.jpg", "name": "日常点滴", "icon": "&#128247;"}, {"theme": "daily", "filename": "2024-10-11-535915.jpg", "path": "photos/daily/2024-10-11-535915.jpg", "name": "日常点滴", "icon": "&#128247;"}, {"theme": "daily", "filename": "2024-10-09-826624.jpg", "path": "photos/daily/2024-10-09-826624.jpg", "name": "日常点滴", "icon": "&#128247;"}, {"theme": "daily", "filename": "2024-10-12-628385.jpg", "path": "photos/daily/2024-10-12-628385.jpg", "name": "日常点滴", "icon": "&#128247;"}, {"theme": "daily", "filename": "2024-10-31-740574.jpg", "path": "photos/daily/2024-10-31-740574.jpg", "name": "日常点滴", "icon": "&#128247;"}, {"theme": "daily", "filename": "2024-12-22-705676.jpg", "path": "photos/daily/2024-12-22-705676.jpg", "name": "日常点滴", "icon": "&#128247;"}, {"theme": "daily", "filename": "2024-12-30-199356.jpg", "path": "photos/daily/2024-12-30-199356.jpg", "name": "日常点滴", "icon": "&#128247;"}, {"theme": "daily", "filename": "2025-01-28-537249.jpg", "path": "photos/daily/2025-01-28-537249.jpg", "name": "日常点滴", "icon": "&#128247;"}, {"theme": "daily", "filename": "2025-02-17-559328.jpg", "path": "photos/daily/2025-02-17-559328.jpg", "name": "日常点滴", "icon": "&#128247;"}, {"theme": "daily", "filename": "2025-02-17-811963.jpg", "path": "photos/daily/2025-02-17-811963.jpg", "name": "日常点滴", "icon": "&#128247;"}, {"theme": "daily", "filename": "2025-02-21-014877.jpg", "path": "photos/daily/2025-02-21-014877.jpg", "name": "日常点滴", "icon": "&#128247;"}, {"theme": "daily", "filename": "2025-02-22-545131.jpg", "path": "photos/daily/2025-02-22-545131.jpg", "name": "日常点滴", "icon": "&#128247;"}, {"theme": "daily", "filename": "2025-04-17-657506.jpg", "path": "photos/daily/2025-04-17-657506.jpg", "name": "日常点滴", "icon": "&#128247;"}, {"theme": "daily", "filename": "2025-07-10-087184.jpg", "path": "photos/daily/2025-07-10-087184.jpg", "name": "日常点滴", "icon": "&#128247;"}, {"theme": "daily", "filename": "2025-07-15-139140.jpg", "path": "photos/daily/2025-07-15-139140.jpg", "name": "日常点滴", "icon": "&#128247;"}, {"theme": "daily", "filename": "2025-07-31-512117.jpg", "path": "photos/daily/2025-07-31-512117.jpg", "name": "日常点滴", "icon": "&#128247;"}, {"theme": "daily", "filename": "2025-07-29-064969.jpg", "path": "photos/daily/2025-07-29-064969.jpg", "name": "日常点滴", "icon": "&#128247;"}, {"theme": "daily", "filename": "2025-07-30-795616.jpg", "path": "photos/daily/2025-07-30-795616.jpg", "name": "日常点滴", "icon": "&#128247;"}, {"theme": "daily", "filename": "2025-07-30-813160.jpg", "path": "photos/daily/2025-07-30-813160.jpg", "name": "日常点滴", "icon": "&#128247;"}, {"theme": "daily", "filename": "2025-08-08-372954.jpg", "path": "photos/daily/2025-08-08-372954.jpg", "name": "日常点滴", "icon": "&#128247;"}, {"theme": "daily", "filename": "2025-08-18-483105.jpg", "path": "photos/daily/2025-08-18-483105.jpg", "name": "日常点滴", "icon": "&#128247;"}, {"theme": "daily", "filename": "2025-09-02-108805.jpg", "path": "photos/daily/2025-09-02-108805.jpg", "name": "日常点滴", "icon": "&#128247;"}, {"theme": "daily", "filename": "2025-10-07-100889.jpg", "path": "photos/daily/2025-10-07-100889.jpg", "name": "日常点滴", "icon": "&#128247;"}, {"theme": "daily", "filename": "2025-10-09-900789.jpg", "path": "photos/daily/2025-10-09-900789.jpg", "name": "日常点滴", "icon": "&#128247;"}, {"theme": "daily", "filename": "2026-01-10-115654.jpg", "path": "photos/daily/2026-01-10-115654.jpg", "name": "日常点滴", "icon": "&#128247;"}, {"theme": "daily", "filename": "2026-01-10-151068.jpg", "path": "photos/daily/2026-01-10-151068.jpg", "name": "日常点滴", "icon": "&#128247;"}, {"theme": "daily", "filename": "2026-02-09-673091.jpg", "path": "photos/daily/2026-02-09-673091.jpg", "name": "日常点滴", "icon": "&#128247;"}, {"theme": "daily", "filename": "2026-04-26-470982.jpg", "path": "photos/daily/2026-04-26-470982.jpg", "name": "日常点滴", "icon": "&#128247;"}, {"theme": "daily", "filename": "2026-04-26-511571.jpg", "path": "photos/daily/2026-04-26-511571.jpg", "name": "日常点滴", "icon": "&#128247;"}, {"theme": "daily", "filename": "2026-04-26-525397.jpg", "path": "photos/daily/2026-04-26-525397.jpg", "name": "日常点滴", "icon": "&#128247;"}]};
-        
-        let currentTheme = null;
+        const photoData = [{"theme": "birth", "themeName": "初临人世", "emoji": "👶", "color": "#FFB6C1", "photos": ["/亲宝宝/亲宝宝/将将/2023-05/2023-05-02-847532.jpg", "/亲宝宝/亲宝宝/将将/2023-05/2023-05-08-282448.jpg", "/亲宝宝/亲宝宝/将将/2023-05/2023-05-14-172123.jpg", "/亲宝宝/亲宝宝/将将/2023-05/2023-05-23-326540.jpg", "/亲宝宝/亲宝宝/将将/2023-05/2023-05-26-300323.jpg", "/亲宝宝/亲宝宝/将将/2023-05/2023-05-28-542939.jpg", "/亲宝宝/亲宝宝/将将/2023-05/2023-05-28-543849.jpg", "/亲宝宝/亲宝宝/将将/2023-05/2023-05-28-554696.jpg", "/亲宝宝/亲宝宝/将将/2023-05/2023-05-28-566471.jpg", "/亲宝宝/亲宝宝/将将/2023-05/2023-05-28-578028.jpg", "/亲宝宝/亲宝宝/将将/2023-06/2023-06-04-693532.jpg", "/亲宝宝/亲宝宝/将将/2023-06/2023-06-06-821672.jpg", "/亲宝宝/亲宝宝/将将/2023-06/2023-06-15-308223.jpg", "/亲宝宝/亲宝宝/将将/2023-06/2023-06-25-604374.jpg", "/亲宝宝/亲宝宝/将将/2023-06/2023-06-30-811185.jpg"]}, {"theme": "birthday1", "themeName": "周岁庆典", "emoji": "🎂", "color": "#87CEEB", "photos": ["/亲宝宝/亲宝宝/将将/2024-04/2024-04-18-692616.jpg", "/亲宝宝/亲宝宝/将将/2024-04/2024-04-18-710121.jpg", "/亲宝宝/亲宝宝/将将/2024-04/2024-04-18-680864.jpg", "/亲宝宝/亲宝宝/将将/2024-04/2024-04-18-691543.jpg"]}, {"theme": "birthday2", "themeName": "两岁成长", "emoji": "🎈", "color": "#98FB98", "photos": ["f:/养虾记录workbuddy/album_site/photos/birthday2/2025-04-07-810703.jpg", "f:/养虾记录workbuddy/album_site/photos/birthday2/2025-04-09-797329.jpg", "f:/养虾记录workbuddy/album_site/photos/birthday2/2025-04-09-797330.jpg", "f:/养虾记录workbuddy/album_site/photos/birthday2/08aa64e9-76b6-4957-bc2b-e137f1268b91.png", "f:/养虾记录workbuddy/album_site/photos/birthday2/2025-04-17-657506.jpg", "f:/养虾记录workbuddy/album_site/photos/birthday2/2025-04-07-806764.jpg"]}, {"theme": "birthday3", "themeName": "三岁快乐", "emoji": "🎉", "color": "#DDA0DD", "photos": ["/亲宝宝/亲宝宝/将将/2026-04/2026-04-25-092458.jpg", "/亲宝宝/亲宝宝/将将/2026-04/2026-04-26-099428.jpg", "/亲宝宝/亲宝宝/将将/2026-04/2026-04-26-132059.jpg", "/亲宝宝/亲宝宝/将将/2026-04/2026-04-26-551047.jpg"]}, {"theme": "mothersday", "themeName": "母子情深", "emoji": "❤️", "color": "#FF6347", "photos": ["/亲宝宝/亲宝宝/将将/2023-07/2023-07-16-327740.jpg", "/亲宝宝/亲宝宝/将将/2023-09/2023-09-09-959872.jpg", "/亲宝宝/亲宝宝/将将/2023-09/2023-09-09-974423.jpg", "/亲宝宝/亲宝宝/将将/2023-09/2023-09-29-778057.jpg", "/亲宝宝/亲宝宝/将将/2023-10/2023-10-14-152209.jpg", "/亲宝宝/亲宝宝/将将/2023-11/2023-11-17-233721.jpg", "/亲宝宝/亲宝宝/将将/2023-12/2023-12-02-661816.jpg", "/亲宝宝/亲宝宝/将将/2023-12/2023-12-12-011797.jpg", "/亲宝宝/亲宝宝/将将/2024-02/2024-02-11-358188.jpg", "/亲宝宝/亲宝宝/将将/2024-02/2024-02-16-899585.jpg", "/亲宝宝/亲宝宝/将将/2024-02/2024-02-16-900613.jpg", "/亲宝宝/亲宝宝/将将/2024-02/2024-02-20-746809.jpg", "/亲宝宝/亲宝宝/将将/2024-03/2024-03-11-580529.jpg", "/亲宝宝/亲宝宝/将将/2024-03/2024-03-15-730585.jpg", "/亲宝宝/亲宝宝/将将/2024-05/2024-05-13-604879.jpg", "/亲宝宝/亲宝宝/将将/2024-05/2024-05-15-821031.jpg", "/亲宝宝/亲宝宝/将将/2024-08/2024-08-13-116536.jpg", "/亲宝宝/亲宝宝/将将/2024-08/2024-08-16-882175.jpg", "/亲宝宝/亲宝宝/将将/2024-08/2024-08-13-101660.jpg", "/亲宝宝/亲宝宝/将将/2024-09/2024-09-14-046894.jpg", "/亲宝宝/亲宝宝/将将/2024-10/2024-10-21-243795.jpg", "/亲宝宝/亲宝宝/将将/2024-11/2024-11-14-439957.jpg", "/亲宝宝/亲宝宝/将将/2024-11/2024-11-18-427732.jpg", "/亲宝宝/亲宝宝/将将/2025-02/2025-02-21-067056.jpg", "/亲宝宝/亲宝宝/将将/2025-02/2025-02-23-056850.jpg", "/亲宝宝/亲宝宝/将将/2025-02/2025-02-23-108144.jpg", "/亲宝宝/亲宝宝/将将/2025-08/2025-08-30-182903.jpg", "/亲宝宝/亲宝宝/将将/2025-09/2025-09-02-405740.jpg", "/亲宝宝/亲宝宝/将将/2025-09/2025-09-02-446033.jpg", "/亲宝宝/亲宝宝/将将/2025-10/2025-10-01-868906.jpg", "/亲宝宝/亲宝宝/将将/2026-02/2026-02-14-957770.jpg", "/亲宝宝/亲宝宝/将将/2026-02/2026-02-17-116937.jpg", "/亲宝宝/亲宝宝/将将/2026-02/2026-02-17-119965.jpg", "/亲宝宝/亲宝宝/将将/2026-02/2026-02-17-154296.jpg", "/亲宝宝/亲宝宝/将将/2026-02/2026-02-17-165023.jpg"]}, {"theme": "milestones", "themeName": "成长里程碑", "emoji": "⭐", "color": "#FFD700", "photos": ["/亲宝宝/亲宝宝/将将/2023-07/2023-07-01-928202.jpg", "/亲宝宝/亲宝宝/将将/2023-08/2023-08-06-976803.jpg", "/亲宝宝/亲宝宝/将将/2023-08/2023-08-15-622249.jpg", "/亲宝宝/亲宝宝/将将/2023-08/2023-08-15-632046.jpg", "/亲宝宝/亲宝宝/将将/2023-08/2023-08-15-883330.jpg", "/亲宝宝/亲宝宝/将将/2023-08/2023-08-15-884554.jpg", "/亲宝宝/亲宝宝/将将/2023-10/2023-10-02-065973.jpg", "/亲宝宝/亲宝宝/将将/2023-10/2023-10-16-128202.jpg", "/亲宝宝/亲宝宝/将将/2023-10/2023-10-31-661478.jpg", "/亲宝宝/亲宝宝/将将/2023-10/2023-10-08-407443.jpg", "/亲宝宝/亲宝宝/将将/2023-11/2023-11-05-498562.jpg", "/亲宝宝/亲宝宝/将将/2023-11/2023-11-21-695643.jpg", "/亲宝宝/亲宝宝/将将/2023-12/2023-12-05-379974.jpg", "/亲宝宝/亲宝宝/将将/2024-03/2024-03-28-012151.jpg", "/亲宝宝/亲宝宝/将将/2024-05/2024-05-06-859823.jpg", "/亲宝宝/亲宝宝/将将/2024-05/2024-05-06-859874.jpg", "/亲宝宝/亲宝宝/将将/2024-05/2024-05-06-865641.jpg", "/亲宝宝/亲宝宝/将将/2024-05/2024-05-06-886003.jpg", "/亲宝宝/亲宝宝/将将/2024-05/2024-05-12-956143.jpg", "/亲宝宝/亲宝宝/将将/2024-05/2024-05-13-581739.jpg", "/亲宝宝/亲宝宝/将将/2024-05/2024-05-15-768903.jpg", "/亲宝宝/亲宝宝/将将/2024-05/2024-05-15-833053.jpg", "/亲宝宝/亲宝宝/将将/2024-05/2024-05-16-324621.jpg", "/亲宝宝/亲宝宝/将将/2024-05/2024-05-16-621072.jpg", "/亲宝宝/亲宝宝/将将/2024-05/2024-05-30-592887.jpg", "/亲宝宝/亲宝宝/将将/2024-06/2024-06-14-158614.jpg", "/亲宝宝/亲宝宝/将将/2024-06/2024-06-14-443811.jpg", "/亲宝宝/亲宝宝/将将/2024-06/2024-06-15-176091.jpg", "/亲宝宝/亲宝宝/将将/2024-06/2024-06-16-632819.jpg", "/亲宝宝/亲宝宝/将将/2024-08/2024-08-13-087727.jpg", "/亲宝宝/亲宝宝/将将/2024-09/2024-09-02-924967.jpg", "/亲宝宝/亲宝宝/将将/2024-09/2024-09-12-967864.jpg", "/亲宝宝/亲宝宝/将将/2024-09/2024-09-17-016555.jpg", "/亲宝宝/亲宝宝/将将/2024-09/2024-09-30-854791.jpg", "/亲宝宝/亲宝宝/将将/2024-11/2024-11-03-221045.jpg", "/亲宝宝/亲宝宝/将将/2024-11/2024-11-05-408392.jpg", "/亲宝宝/亲宝宝/将将/2024-11/2024-11-11-893070.jpg", "/亲宝宝/亲宝宝/将将/2024-11/2024-11-13-783130.jpg", "/亲宝宝/亲宝宝/将将/2024-11/2024-11-28-093724.jpg", "/亲宝宝/亲宝宝/将将/2024-12/2024-12-06-972871.jpg", "/亲宝宝/亲宝宝/将将/2024-12/2024-12-10-619368.jpg", "/亲宝宝/亲宝宝/将将/2024-12/2024-12-10-900884.jpg", "/亲宝宝/亲宝宝/将将/2024-12/2024-12-28-843288.jpg", "/亲宝宝/亲宝宝/将将/2025-02/2025-02-17-582917.jpg", "/亲宝宝/亲宝宝/将将/2025-02/2025-02-17-766456.jpg", "/亲宝宝/亲宝宝/将将/2025-02/2025-02-23-636382.jpg", "/亲宝宝/亲宝宝/将将/2025-02/2025-02-23-647167.jpg", "/亲宝宝/亲宝宝/将将/2025-05/2025-05-16-212751.jpg", "/亲宝宝/亲宝宝/将将/2025-06/2025-06-04-512440.jpg", "/亲宝宝/亲宝宝/将将/2025-06/2025-06-30-054663.jpg", "/亲宝宝/亲宝宝/将将/2025-10/2025-10-05-734511.jpg", "/亲宝宝/亲宝宝/将将/2025-10/2025-10-08-804700.jpg", "/亲宝宝/亲宝宝/将将/2025-10/2025-10-08-829518.jpg", "/亲宝宝/亲宝宝/将将/2025-10/2025-10-01-872847.jpg", "/亲宝宝/亲宝宝/将将/2025-11/2025-11-12-821958.jpg", "/亲宝宝/亲宝宝/将将/2025-12/2025-12-14-151624.jpg", "/亲宝宝/亲宝宝/将将/2025-12/2025-12-16-153404.jpg", "/亲宝宝/亲宝宝/将将/2025-12/2025-12-18-881465.jpg", "/亲宝宝/亲宝宝/将将/2025-12/2025-12-21-501970.jpg", "/亲宝宝/亲宝宝/将将/2025-12/2025-12-16-412857.jpg", "/亲宝宝/亲宝宝/将将/2026-02/2026-02-18-524046.jpg", "/亲宝宝/亲宝宝/将将/2026-02/2026-02-19-232772.jpg", "/亲宝宝/亲宝宝/将将/2026-02/2026-02-19-248601.jpg", "/亲宝宝/亲宝宝/将将/2026-03/2026-03-30-785270.jpg", "/亲宝宝/亲宝宝/将将/2026-04/2026-04-21-705239.jpg", "/亲宝宝/亲宝宝/将将/2026-04/2026-04-22-994617.jpg", "/亲宝宝/亲宝宝/将将/2026-04/2026-04-26-092570.jpg", "/亲宝宝/亲宝宝/将将/2026-05/2026-05-03-227642.jpg"]}, {"theme": "daily", "themeName": "日常点滴", "emoji": "📸", "color": "#20B2AA", "photos": ["/亲宝宝/亲宝宝/将将/2023-07/2023-07-05-603399.jpg", "/亲宝宝/亲宝宝/将将/2023-07/2023-07-09-264430.jpg", "/亲宝宝/亲宝宝/将将/2023-07/2023-07-31-556470.jpg", "/亲宝宝/亲宝宝/将将/2023-07/2023-07-08-308763.jpg", "/亲宝宝/亲宝宝/将将/2023-11/2023-11-22-519342.jpg", "/亲宝宝/亲宝宝/将将/2023-11/2023-11-28-661087.jpg", "/亲宝宝/亲宝宝/将将/2023-12/2023-12-05-574354.jpg", "/亲宝宝/亲宝宝/将将/2023-12/2023-12-25-519601.jpg", "/亲宝宝/亲宝宝/将将/2024-01/2024-01-26-125549.jpg", "/亲宝宝/亲宝宝/将将/2024-02/2024-02-22-500435.jpg", "/亲宝宝/亲宝宝/将将/2024-03/2024-03-08-158493.jpg", "/亲宝宝/亲宝宝/将将/2024-03/2024-03-09-361068.jpg", "/亲宝宝/亲宝宝/将将/2024-04/2024-04-13-522695.jpg", "/亲宝宝/亲宝宝/将将/2024-05/2024-05-17-060840.jpg", "/亲宝宝/亲宝宝/将将/2024-08/2024-08-28-404517.jpg", "/亲宝宝/亲宝宝/将将/2024-10/2024-10-01-821661.jpg", "/亲宝宝/亲宝宝/将将/2024-10/2024-10-11-535915.jpg", "/亲宝宝/亲宝宝/将将/2024-10/2024-10-09-826624.jpg", "/亲宝宝/亲宝宝/将将/2024-10/2024-10-12-628385.jpg", "/亲宝宝/亲宝宝/将将/2024-10/2024-10-31-740574.jpg", "/亲宝宝/亲宝宝/将将/2024-12/2024-12-22-705676.jpg", "/亲宝宝/亲宝宝/将将/2024-12/2024-12-30-199356.jpg", "/亲宝宝/亲宝宝/将将/2025-01/2025-01-28-537249.jpg", "/亲宝宝/亲宝宝/将将/2025-02/2025-02-17-559328.jpg", "/亲宝宝/亲宝宝/将将/2025-02/2025-02-17-811963.jpg", "/亲宝宝/亲宝宝/将将/2025-02/2025-02-21-014877.jpg", "/亲宝宝/亲宝宝/将将/2025-02/2025-02-22-545131.jpg", "/亲宝宝/亲宝宝/将将/2025-04/2025-04-17-657506.jpg", "/亲宝宝/亲宝宝/将将/2025-07/2025-07-10-087184.jpg", "/亲宝宝/亲宝宝/将将/2025-07/2025-07-15-139140.jpg", "/亲宝宝/亲宝宝/将将/2025-07/2025-07-31-512117.jpg", "/亲宝宝/亲宝宝/将将/2025-07/2025-07-29-064969.jpg", "/亲宝宝/亲宝宝/将将/2025-07/2025-07-30-795616.jpg", "/亲宝宝/亲宝宝/将将/2025-07/2025-07-30-813160.jpg", "/亲宝宝/亲宝宝/将将/2025-08/2025-08-08-372954.jpg", "/亲宝宝/亲宝宝/将将/2025-08/2025-08-18-483105.jpg", "/亲宝宝/亲宝宝/将将/2025-09/2025-09-02-108805.jpg", "/亲宝宝/亲宝宝/将将/2025-10/2025-10-07-100889.jpg", "/亲宝宝/亲宝宝/将将/2025-10/2025-10-09-900789.jpg", "/亲宝宝/亲宝宝/将将/2026-01/2026-01-10-115654.jpg", "/亲宝宝/亲宝宝/将将/2026-01/2026-01-10-151068.jpg", "/亲宝宝/亲宝宝/将将/2026-02/2026-02-09-673091.jpg", "/亲宝宝/亲宝宝/将将/2026-04/2026-04-26-470982.jpg", "/亲宝宝/亲宝宝/将将/2026-04/2026-04-26-511571.jpg", "/亲宝宝/亲宝宝/将将/2026-04/2026-04-26-525397.jpg"]}];
+        let currentTheme = -1;
         let currentPhotoIndex = 0;
-        
-        function init() {
-            const themeNav = document.getElementById('themeNav');
-            const themes = Object.keys(PHOTOS_BY_THEME);
-            
-            themes.forEach(function(theme) {
-                const photos = PHOTOS_BY_THEME[theme];
-                const themeItem = document.createElement('div');
-                themeItem.className = 'theme-item';
-                themeItem.dataset.theme = theme;
-                themeItem.innerHTML = '<div><span class="theme-icon">' + photos[0].icon + '</span><span class="theme-name">' + photos[0].name + '</span></div><div class="theme-count">' + photos.length + ' 张照片</div>';
-                themeItem.onclick = function() { filterByTheme(theme); };
-                themeNav.appendChild(themeItem);
-            });
-            
-            showAllPhotos();
-        }
-        
-        function showAllPhotos() {
-            const photoWall = document.getElementById('photoWall');
-            photoWall.innerHTML = '';
-            
-            const themes = Object.keys(PHOTOS_BY_THEME);
-            themes.forEach(function(theme) {
-                const photos = PHOTOS_BY_THEME[theme];
-                
-                const separator = document.createElement('div');
-                separator.className = 'theme-separator';
-                separator.innerHTML = '<h2>' + photos[0].icon + ' ' + photos[0].name + '</h2><p>' + photos.length + ' 张珍贵回忆</p>';
-                photoWall.appendChild(separator);
-                
-                photos.forEach(function(photo, index) {
-                    const photoItem = document.createElement('div');
-                    photoItem.className = 'photo-item';
-                    photoItem.innerHTML = '<img src="' + photo.path + '" alt="' + photo.name + '" loading="lazy"><div class="photo-theme">' + photo.icon + ' ' + photo.name + '</div>';
-                    photoItem.onclick = function() { openViewer(theme, index); };
-                    photoWall.appendChild(photoItem);
-                });
-            });
-        }
-        
-        function filterByTheme(theme) {
-            document.querySelectorAll('.theme-item').forEach(function(item) {
-                item.classList.toggle('active', item.dataset.theme === theme);
-            });
-            
-            const photoWall = document.getElementById('photoWall');
-            
-            if (currentTheme === theme || theme === null) {
-                showAllPhotos();
-                currentTheme = null;
-            } else {
-                photoWall.innerHTML = '';
-                currentTheme = theme;
-                const photos = PHOTOS_BY_THEME[theme];
-                
-                photos.forEach(function(photo, index) {
-                    const photoItem = document.createElement('div');
-                    photoItem.className = 'photo-item';
-                    photoItem.innerHTML = '<img src="' + photo.path + '" alt="' + photo.name + '" loading="lazy"><div class="photo-theme">' + photo.icon + ' ' + photo.name + '</div>';
-                    photoItem.onclick = function() { openViewer(theme, index); };
-                    photoWall.appendChild(photoItem);
-                });
-            }
-        }
-        
-        function openViewer(theme, index) {
-            const viewer = document.getElementById('viewer');
-            const viewerImg = document.getElementById('viewerImg');
-            const viewerInfo = document.getElementById('viewerInfo');
-            
-            currentTheme = theme;
-            currentPhotoIndex = index;
-            
-            const photo = PHOTOS_BY_THEME[theme][index];
-            viewerImg.src = photo.path;
-            viewerInfo.textContent = photo.icon + ' ' + photo.name;
-            
-            viewer.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        }
-        
-        function closeViewer() {
-            const viewer = document.getElementById('viewer');
-            viewer.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
-        
-        function navigateViewer(direction) {
-            const photos = PHOTOS_BY_THEME[currentTheme];
-            currentPhotoIndex += direction;
-            
-            if (currentPhotoIndex < 0) currentPhotoIndex = photos.length - 1;
-            if (currentPhotoIndex >= photos.length) currentPhotoIndex = 0;
-            
-            const photo = photos[currentPhotoIndex];
-            document.getElementById('viewerImg').src = photo.path;
-            document.getElementById('viewerInfo').textContent = photo.icon + ' ' + photo.name;
-        }
-        
-        function enterAlbum() {
-            document.getElementById('intro').style.display = 'none';
-            document.getElementById('main').style.display = 'block';
-            init();
-        }
-        
-        document.addEventListener('keydown', function(e) {
-            const viewer = document.getElementById('viewer');
-            if (viewer.style.display === 'flex') {
-                if (e.key === 'ArrowLeft') navigateViewer(-1);
-                if (e.key === 'ArrowRight') navigateViewer(1);
-                if (e.key === 'Escape') closeViewer();
-            }
-        });
-        
+        let currentPhotos = [];
+        let isMusicPlaying = false;
         let touchStartX = 0;
         let touchEndX = 0;
+
+        function init() {
+            renderMenu();
+            renderAlbums();
+        }
+
+        function renderMenu() {
+            const menu = document.getElementById('side-menu');
+            photoData.forEach((theme, index) => {
+                const item = document.createElement('div');
+                item.className = 'menu-item';
+                item.innerHTML = `${theme.emoji} ${theme.themeName} (${theme.photos.length})`;
+                item.onclick = () => scrollToTheme(index);
+                menu.appendChild(item);
+            });
+        }
+
+        function renderAlbums() {
+            const main = document.querySelector('.main-content');
+            photoData.forEach((theme, index) => {
+                const section = document.createElement('section');
+                section.className = 'theme-section';
+                section.id = `theme-${index}`;
+                section.innerHTML = `
+                    <h2 class="theme-header">${theme.emoji} ${theme.themeName}</h2>
+                    <div class="photo-grid">
+                        ${theme.photos.map((photo, photoIndex) => `
+                            <div class="photo-card" onclick="openViewer(${index}, ${photoIndex})">
+                                <img src="${photo}" alt="照片" loading="lazy">
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                main.appendChild(section);
+            });
+        }
+
+        function toggleMenu() {
+            const menu = document.getElementById('side-menu');
+            const overlay = document.querySelector('.side-menu-overlay');
+            menu.classList.toggle('open');
+            overlay.classList.toggle('open');
+        }
+
+        function scrollToTheme(index) {
+            currentTheme = index;
+            
+            if (index === -1) {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else {
+                const section = document.getElementById(`theme-${index}`);
+                if (section) {
+                    section.scrollIntoView({ behavior: 'smooth' });
+                }
+            }
+            
+            // 更新菜单状态
+            document.querySelectorAll('.menu-item').forEach((item, i) => {
+                item.classList.toggle('active', i === index + 1);
+            });
+            
+            // 关闭菜单（手机）
+            toggleMenu();
+        }
+
+        function openViewer(themeIndex, photoIndex) {
+            currentTheme = themeIndex;
+            currentPhotoIndex = photoIndex;
+            currentPhotos = photoData[themeIndex].photos;
+            
+            const viewer = document.getElementById('viewer');
+            const img = document.getElementById('viewer-img');
+            
+            img.src = currentPhotos[currentPhotoIndex];
+            viewer.classList.add('show');
+            
+            // 阻止背景滚动
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeViewer() {
+            const viewer = document.getElementById('viewer');
+            viewer.classList.remove('show');
+            
+            // 恢复背景滚动
+            document.body.style.overflow = '';
+        }
+
+        function prevPhoto() {
+            currentPhotoIndex = (currentPhotoIndex - 1 + currentPhotos.length) % currentPhotos.length;
+            document.getElementById('viewer-img').src = currentPhotos[currentPhotoIndex];
+        }
+
+        function nextPhoto() {
+            currentPhotoIndex = (currentPhotoIndex + 1) % currentPhotos.length;
+            document.getElementById('viewer-img').src = currentPhotos[currentPhotoIndex];
+        }
+
+        function toggleMusic() {
+            const music = document.getElementById('bg-music');
+            const btn = document.getElementById('music-btn');
+            
+            if (isMusicPlaying) {
+                music.pause();
+                btn.innerHTML = '🎵';
+                btn.classList.remove('music-on');
+            } else {
+                music.play().catch(e => console.log('自动播放被阻止'));
+                btn.innerHTML = '🎶';
+                btn.classList.add('music-on');
+            }
+            isMusicPlaying = !isMusicPlaying;
+        }
+
+        function enterAlbum() {
+            const intro = document.getElementById('intro');
+            const main = document.getElementById('main-container');
+            
+            intro.style.display = 'none';
+            main.classList.add('show');
+            
+            // 尝试自动播放音乐
+            const music = document.getElementById('bg-music');
+            music.play().catch(e => console.log('自动播放被阻止'));
+        }
+
+        // 键盘导航
+        document.addEventListener('keydown', (e) => {
+            const viewer = document.getElementById('viewer');
+            if (!viewer.classList.contains('show')) return;
+            
+            if (e.key === 'Escape') closeViewer();
+            if (e.key === 'ArrowLeft') prevPhoto();
+            if (e.key === 'ArrowRight') nextPhoto();
+        });
+
+        // 触摸滑动支持 - 手机优化
+        const viewer = document.getElementById('viewer');
         
-        document.getElementById('viewer').addEventListener('touchstart', function(e) {
+        viewer.addEventListener('touchstart', (e) => {
             touchStartX = e.changedTouches[0].screenX;
-        });
-        
-        document.getElementById('viewer').addEventListener('touchend', function(e) {
+        }, { passive: true });
+
+        viewer.addEventListener('touchend', (e) => {
             touchEndX = e.changedTouches[0].screenX;
-            if (touchStartX - touchEndX > 50) navigateViewer(1);
-            if (touchEndX - touchStartX > 50) navigateViewer(-1);
+            const diff = touchStartX - touchEndX;
+            
+            if (Math.abs(diff) > 50) {
+                if (diff > 0) {
+                    nextPhoto();
+                } else {
+                    prevPhoto();
+                }
+            }
+        }, { passive: true });
+
+        // 点击图片外侧关闭
+        viewer.addEventListener('click', (e) => {
+            if (e.target === viewer) {
+                closeViewer();
+            }
         });
+
+        // 初始化
+        init();
     </script>
 </body>
 </html>
