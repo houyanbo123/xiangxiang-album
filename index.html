@@ -628,7 +628,9 @@
                 div.onclick = () => openLightbox(index);
                 
                 const img = document.createElement('img');
-                img.src = 'thumbnails/' + item.theme + '/' + item.photo;
+                // item.photo 已经是 "photos/theme/file.jpg" 格式
+                // 缩略图路径：去掉 "photos/" 前缀，加上 "thumbnails/" 前缀
+                img.src = 'thumbnails/' + item.photo.replace('photos/', '');
                 img.alt = item.photo;
                 img.loading = 'lazy';
                 
@@ -663,7 +665,8 @@
             const img = document.getElementById('lightboxImage');
             const item = allPhotos[index];
             
-            img.src = 'photos/' + item.theme + '/' + item.photo;
+            // item.photo 已经是 "photos/theme/file.jpg" 格式
+            img.src = item.photo;
             document.getElementById('lightboxCaption').textContent = item.photo + ' (' + (index + 1) + '/' + allPhotos.length + ')';
             
             lightbox.classList.add('visible');
