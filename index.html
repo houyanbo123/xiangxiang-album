@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>将将的成长相册 💝</title>
+    <title>将将的成长相册</title>
     <style>
         * {
             margin: 0;
@@ -285,39 +285,6 @@
             font-size: 0.9em;
         }
         
-        /* 音乐控制 */
-        #musicControl {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
-            border: none;
-            border-radius: 50%;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5em;
-            z-index: 1500;
-            transition: all 0.3s ease;
-        }
-        
-        #musicControl:hover {
-            transform: scale(1.1);
-        }
-        
-        #musicControl.playing {
-            animation: spin 3s linear infinite;
-        }
-        
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        
         /* 响应式 */
         @media (max-width: 768px) {
             #intro h1 {
@@ -347,40 +314,20 @@
                 font-size: 0.9em;
             }
         }
-        
-        /* 加载动画 */
-        .loading {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 40px;
-            color: #999;
-            font-size: 1.1em;
-        }
-        
-        .spinner {
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #ff6b6b;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            animation: spin 1s linear infinite;
-            margin-right: 10px;
-        }
     </style>
 </head>
 <body>
     <!-- 开场 -->
     <div id="intro">
-        <h1>💝 将将的成长相册</h1>
+        <h1>将将的成长相册</h1>
         <p>记录每一个珍贵瞬间</p>
-        <button id="enterBtn" onclick="enterAlbum()">🎵 开启记忆之旅</button>
+        <button id="enterBtn" onclick="enterAlbum()">开启记忆之旅</button>
     </div>
     
     <!-- 主内容 -->
     <div id="mainContainer">
         <div class="header">
-            <h1>💝 将将的成长相册</h1>
+            <h1>将将的成长相册</h1>
             <p>共 <span id="totalCount">0</span> 张照片，记录美好时光</p>
         </div>
         
@@ -396,37 +343,213 @@
     
     <!-- Lightbox -->
     <div id="lightbox">
-        <button id="lightboxClose" onclick="closeLightbox()">✕</button>
-        <button class="lightbox-nav" id="lightboxPrev" onclick="navigateLightbox(-1)">‹</button>
+        <button id="lightboxClose" onclick="closeLightbox()">X</button>
+        <button class="lightbox-nav" id="lightboxPrev" onclick="navigateLightbox(-1)">&#8249;</button>
         <img id="lightboxImage" src="" alt="照片">
-        <button class="lightbox-nav" id="lightboxNext" onclick="navigateLightbox(1)">›</button>
+        <button class="lightbox-nav" id="lightboxNext" onclick="navigateLightbox(1)">&#8250;</button>
         <div id="lightboxCaption"></div>
     </div>
     
-    <!-- 音乐控制 -->
-    <button id="musicControl" onclick="toggleMusic()">🎵</button>
-    
-    <!-- 背景音乐 -->
-    <audio id="bgMusic" loop crossorigin="anonymous">
-        <source src="https://houyanbo123.github.io/xiangxiang-album/music/background.mp3" type="audio/mpeg">
-    </audio>
-    
     <script>
-        // 照片数据（使用缩略图加速加载）
+        // 照片数据
         const photoData = {
-            "birth": ["2023-05-02-847532.jpg", "2023-05-02-414159.jpg", "2022-06-01-852500.jpg", "2022-10-04-189607.jpg", "2022-10-04-513836.jpg", "2022-10-04-608569.jpg", "2022-10-04-711753.jpg", "2022-10-04-846549.jpg", "2022-10-04-105724.jpg", "2022-10-04-325101.jpg", "2022-10-04-446105.jpg", "2022-10-04-598230.jpg", "2022-12-23-Vanmes.jpg", "2023-01-25-676611.jpg", "2023-05-02-872670.jpg"],
-            "birthday1": ["2024-05-02-895678.jpg", "2024-05-03-778723.jpg", "2024-05-20-557440.jpg", "2024-07-16-327740.jpg"],
-            "birthday2": ["2025-03-20-445028.jpg", "2025-03-22-594491.jpg", "2025-04-07-887305.jpg", "2025-04-12-764453.jpg", "2025-04-26-470982.jpg", "2025-04-30-301153.jpg", "2026-02-28-452407.jpg"],
-            "birthday3": ["2026-05-02-196006.jpg", "2026-05-03-478735.jpg", "2026-05-03-471279.jpg", "2026-05-08-425980.jpg"],
-            "daily": ["2025-04-26-470982.jpg", "2025-04-07-887305.jpg", "2025-03-22-594491.jpg", "2025-03-20-445028.jpg", "2025-04-30-301153.jpg", "2025-04-12-764453.jpg", "2026-02-28-452407.jpg", "2026-05-02-196006.jpg", "2026-05-03-478735.jpg", "2026-05-03-471279.jpg", "2026-05-08-425980.jpg"],
-            "milestones": ["2023-07-16-327740.jpg", "2023-08-20-557440.jpg", "2023-10-01-895678.jpg", "2023-11-15-778723.jpg", "2024-01-20-196006.jpg", "2024-02-14-478735.jpg", "2024-03-10-471279.jpg", "2024-04-15-425980.jpg", "2024-05-20-301153.jpg", "2024-06-18-764453.jpg", "2024-07-22-445028.jpg", "2024-08-30-594491.jpg", "2024-09-15-887305.jpg", "2024-10-20-470982.jpg", "2024-11-11-452407.jpg", "2024-12-25-471279.jpg", "2025-01-15-478735.jpg", "2025-02-14-196006.jpg", "2025-03-08-425980.jpg", "2025-04-05-301153.jpg"],
-            "mothersday": ["2023-07-16-327740.jpg", "2023-08-20-557440.jpg", "2023-10-01-895678.jpg", "2023-11-15-778723.jpg", "2024-01-20-196006.jpg", "2024-02-14-478735.jpg", "2024-03-10-471279.jpg", "2024-05-12-425980.jpg", "2024-05-20-301153.jpg", "2024-06-18-764453.jpg", "2024-07-22-445028.jpg", "2024-08-30-594491.jpg", "2024-09-15-887305.jpg", "2024-10-20-470982.jpg", "2024-11-11-452407.jpg", "2024-12-25-471279.jpg", "2025-01-15-478735.jpg", "2025-02-14-196006.jpg", "2025-03-08-425980.jpg", "2025-04-05-301153.jpg", "2025-05-11-557440.jpg"]
-        };
+    "birth": [
+        "photos/birth/2023-05-02-847532.jpg",
+        "photos/birth/2023-05-08-282448.jpg",
+        "photos/birth/2023-05-14-172123.jpg",
+        "photos/birth/2023-05-23-326540.jpg",
+        "photos/birth/2023-05-26-300323.jpg",
+        "photos/birth/2023-05-28-542939.jpg",
+        "photos/birth/2023-05-28-543849.jpg",
+        "photos/birth/2023-05-28-554696.jpg",
+        "photos/birth/2023-05-28-566471.jpg",
+        "photos/birth/2023-05-28-578028.jpg",
+        "photos/birth/2023-06-04-693532.jpg",
+        "photos/birth/2023-06-06-821672.jpg",
+        "photos/birth/2023-06-15-308223.jpg",
+        "photos/birth/2023-06-25-604374.jpg",
+        "photos/birth/2023-06-30-811185.jpg"
+    ],
+    "birthday1": [
+        "photos/birthday1/2024-04-18-692616.jpg",
+        "photos/birthday1/2024-04-18-710121.jpg",
+        "photos/birthday1/2024-04-18-680864.jpg",
+        "photos/birthday1/2024-04-18-691543.jpg"
+    ],
+    "birthday2": [
+        "photos/birthday2/08aa64e9-76b6-4957-bc2b-e137f1268b91.png",
+        "photos/birthday2/2025-04-07-806764.jpg",
+        "photos/birthday2/2025-04-07-810703.jpg",
+        "photos/birthday2/2025-04-07-887305.jpg",
+        "photos/birthday2/2025-04-09-797329.jpg",
+        "photos/birthday2/2025-04-09-797330.jpg",
+        "photos/birthday2/2025-04-17-657506.jpg"
+    ],
+    "birthday3": [
+        "photos/birthday3/2026-04-25-092458.jpg",
+        "photos/birthday3/2026-04-26-099428.jpg",
+        "photos/birthday3/2026-04-26-132059.jpg",
+        "photos/birthday3/2026-04-26-551047.jpg"
+    ],
+    "mothersday": [
+        "photos/mothersday/2023-07-16-327740.jpg",
+        "photos/mothersday/2023-09-09-959872.jpg",
+        "photos/mothersday/2023-09-09-974423.jpg",
+        "photos/mothersday/2023-09-29-778057.jpg",
+        "photos/mothersday/2023-10-14-152209.jpg",
+        "photos/mothersday/2023-11-17-233721.jpg",
+        "photos/mothersday/2023-12-02-661816.jpg",
+        "photos/mothersday/2023-12-12-011797.jpg",
+        "photos/mothersday/2024-02-11-358188.jpg",
+        "photos/mothersday/2024-02-16-899585.jpg",
+        "photos/mothersday/2024-02-16-900613.jpg",
+        "photos/mothersday/2024-02-20-746809.jpg",
+        "photos/mothersday/2024-03-11-580529.jpg",
+        "photos/mothersday/2024-03-15-730585.jpg",
+        "photos/mothersday/2024-05-13-604879.jpg",
+        "photos/mothersday/2024-05-15-821031.jpg",
+        "photos/mothersday/2024-08-13-116536.jpg",
+        "photos/mothersday/2024-08-16-882175.jpg",
+        "photos/mothersday/2024-08-13-101660.jpg",
+        "photos/mothersday/2024-09-14-046894.jpg",
+        "photos/mothersday/2024-10-21-243795.jpg",
+        "photos/mothersday/2024-11-14-439957.jpg",
+        "photos/mothersday/2024-11-18-427732.jpg",
+        "photos/mothersday/2025-02-21-067056.jpg",
+        "photos/mothersday/2025-02-23-056850.jpg",
+        "photos/mothersday/2025-02-23-108144.jpg",
+        "photos/mothersday/2025-08-30-182903.jpg",
+        "photos/mothersday/2025-09-02-405740.jpg",
+        "photos/mothersday/2025-09-02-446033.jpg",
+        "photos/mothersday/2025-10-01-868906.jpg",
+        "photos/mothersday/2026-02-14-957770.jpg",
+        "photos/mothersday/2026-02-17-116937.jpg",
+        "photos/mothersday/2026-02-17-119965.jpg",
+        "photos/mothersday/2026-02-17-154296.jpg",
+        "photos/mothersday/2026-02-17-165023.jpg"
+    ],
+    "milestones": [
+        "photos/milestones/2023-07-01-928202.jpg",
+        "photos/milestones/2023-08-06-976803.jpg",
+        "photos/milestones/2023-08-15-622249.jpg",
+        "photos/milestones/2023-08-15-632046.jpg",
+        "photos/milestones/2023-08-15-883330.jpg",
+        "photos/milestones/2023-08-15-884554.jpg",
+        "photos/milestones/2023-10-02-065973.jpg",
+        "photos/milestones/2023-10-16-128202.jpg",
+        "photos/milestones/2023-10-31-661478.jpg",
+        "photos/milestones/2023-10-08-407443.jpg",
+        "photos/milestones/2023-11-05-498562.jpg",
+        "photos/milestones/2023-11-21-695643.jpg",
+        "photos/milestones/2023-12-05-379974.jpg",
+        "photos/milestones/2024-03-28-012151.jpg",
+        "photos/milestones/2024-05-06-859823.jpg",
+        "photos/milestones/2024-05-06-859874.jpg",
+        "photos/milestones/2024-05-06-865641.jpg",
+        "photos/milestones/2024-05-06-886003.jpg",
+        "photos/milestones/2024-05-12-956143.jpg",
+        "photos/milestones/2024-05-13-581739.jpg",
+        "photos/milestones/2024-05-15-768903.jpg",
+        "photos/milestones/2024-05-15-833053.jpg",
+        "photos/milestones/2024-05-16-324621.jpg",
+        "photos/milestones/2024-05-16-621072.jpg",
+        "photos/milestones/2024-05-30-592887.jpg",
+        "photos/milestones/2024-06-14-158614.jpg",
+        "photos/milestones/2024-06-14-443811.jpg",
+        "photos/milestones/2024-06-15-176091.jpg",
+        "photos/milestones/2024-06-16-632819.jpg",
+        "photos/milestones/2024-08-13-087727.jpg",
+        "photos/milestones/2024-09-02-924967.jpg",
+        "photos/milestones/2024-09-12-967864.jpg",
+        "photos/milestones/2024-09-17-016555.jpg",
+        "photos/milestones/2024-09-30-854791.jpg",
+        "photos/milestones/2024-11-03-221045.jpg",
+        "photos/milestones/2024-11-05-408392.jpg",
+        "photos/milestones/2024-11-11-893070.jpg",
+        "photos/milestones/2024-11-13-783130.jpg",
+        "photos/milestones/2024-11-28-093724.jpg",
+        "photos/milestones/2024-12-06-972871.jpg",
+        "photos/milestones/2024-12-10-619368.jpg",
+        "photos/milestones/2024-12-10-900884.jpg",
+        "photos/milestones/2024-12-28-843288.jpg",
+        "photos/milestones/2025-02-17-582917.jpg",
+        "photos/milestones/2025-02-17-766456.jpg",
+        "photos/milestones/2025-02-23-636382.jpg",
+        "photos/milestones/2025-02-23-647167.jpg",
+        "photos/milestones/2025-05-16-212751.jpg",
+        "photos/milestones/2025-06-04-512440.jpg",
+        "photos/milestones/2025-06-30-054663.jpg",
+        "photos/milestones/2025-10-05-734511.jpg",
+        "photos/milestones/2025-10-08-804700.jpg",
+        "photos/milestones/2025-10-08-829518.jpg",
+        "photos/milestones/2025-10-01-872847.jpg",
+        "photos/milestones/2025-11-12-821958.jpg",
+        "photos/milestones/2025-12-14-151624.jpg",
+        "photos/milestones/2025-12-16-153404.jpg",
+        "photos/milestones/2025-12-18-881465.jpg",
+        "photos/milestones/2025-12-21-501970.jpg",
+        "photos/milestones/2025-12-16-412857.jpg",
+        "photos/milestones/2026-02-18-524046.jpg",
+        "photos/milestones/2026-02-19-232772.jpg",
+        "photos/milestones/2026-02-19-248601.jpg",
+        "photos/milestones/2026-03-30-785270.jpg",
+        "photos/milestones/2026-04-21-705239.jpg",
+        "photos/milestones/2026-04-22-994617.jpg",
+        "photos/milestones/2026-04-26-092570.jpg",
+        "photos/milestones/2026-05-03-227642.jpg"
+    ],
+    "daily": [
+        "photos/daily/2023-07-05-603399.jpg",
+        "photos/daily/2023-07-09-264430.jpg",
+        "photos/daily/2023-07-31-556470.jpg",
+        "photos/daily/2023-07-08-308763.jpg",
+        "photos/daily/2023-11-22-519342.jpg",
+        "photos/daily/2023-11-28-661087.jpg",
+        "photos/daily/2023-12-05-574354.jpg",
+        "photos/daily/2023-12-25-519601.jpg",
+        "photos/daily/2024-01-26-125549.jpg",
+        "photos/daily/2024-02-22-500435.jpg",
+        "photos/daily/2024-03-08-158493.jpg",
+        "photos/daily/2024-03-09-361068.jpg",
+        "photos/daily/2024-04-13-522695.jpg",
+        "photos/daily/2024-05-17-060840.jpg",
+        "photos/daily/2024-08-28-404517.jpg",
+        "photos/daily/2024-10-01-821661.jpg",
+        "photos/daily/2024-10-11-535915.jpg",
+        "photos/daily/2024-10-09-826624.jpg",
+        "photos/daily/2024-10-12-628385.jpg",
+        "photos/daily/2024-10-31-740574.jpg",
+        "photos/daily/2024-12-22-705676.jpg",
+        "photos/daily/2024-12-30-199356.jpg",
+        "photos/daily/2025-01-28-537249.jpg",
+        "photos/daily/2025-02-17-559328.jpg",
+        "photos/daily/2025-02-17-811963.jpg",
+        "photos/daily/2025-02-21-014877.jpg",
+        "photos/daily/2025-02-22-545131.jpg",
+        "photos/daily/2025-04-17-657506.jpg",
+        "photos/daily/2025-07-10-087184.jpg",
+        "photos/daily/2025-07-15-139140.jpg",
+        "photos/daily/2025-07-31-512117.jpg",
+        "photos/daily/2025-07-29-064969.jpg",
+        "photos/daily/2025-07-30-795616.jpg",
+        "photos/daily/2025-07-30-813160.jpg",
+        "photos/daily/2025-08-08-372954.jpg",
+        "photos/daily/2025-08-18-483105.jpg",
+        "photos/daily/2025-09-02-108805.jpg",
+        "photos/daily/2025-10-07-100889.jpg",
+        "photos/daily/2025-10-09-900789.jpg",
+        "photos/daily/2026-01-10-115654.jpg",
+        "photos/daily/2026-01-10-151068.jpg",
+        "photos/daily/2026-02-09-673091.jpg",
+        "photos/daily/2026-04-26-470982.jpg",
+        "photos/daily/2026-04-26-511571.jpg",
+        "photos/daily/2026-04-26-525397.jpg"
+    ]
+};
         
         let currentTheme = 'all';
         let currentPhotoIndex = 0;
         let allPhotos = [];
-        let isMusicPlaying = false;
         
         // 初始化
         document.addEventListener('DOMContentLoaded', function() {
@@ -455,13 +578,13 @@
             const nav = document.getElementById('themeNav');
             const themes = [
                 { key: 'all', name: '全部照片' },
-                { key: 'birth', name: '🐣 出生时' },
-                { key: 'birthday1', name: '🎂 1岁生日' },
-                { key: 'birthday2', name: '🎉 2岁生日' },
-                { key: 'birthday3', name: '🎈 3岁生日' },
-                { key: 'daily', name: '📸 日常生活' },
-                { key: 'milestones', name: '🌟 重要时刻' },
-                { key: 'mothersday', name: '💐 母亲节' }
+                { key: 'birth', name: '出生时' },
+                { key: 'birthday1', name: '1岁生日' },
+                { key: 'birthday2', name: '2岁生日' },
+                { key: 'birthday3', name: '3岁生日' },
+                { key: 'daily', name: '日常生活' },
+                { key: 'milestones', name: '重要时刻' },
+                { key: 'mothersday', name: '母亲节' }
             ];
             
             nav.innerHTML = '';
@@ -505,15 +628,21 @@
                 div.onclick = () => openLightbox(index);
                 
                 const img = document.createElement('img');
-                img.src = `thumbnails/${item.theme}/${item.photo}`;
+                img.src = 'thumbnails/' + item.theme + '/' + item.photo;
                 img.alt = item.photo;
                 img.loading = 'lazy';
+                
+                // 错误处理
+                img.onerror = function() {
+                    console.error('Failed to load:', this.src);
+                    this.style.display = 'none';
+                };
                 
                 div.appendChild(img);
                 
                 const counter = document.createElement('div');
                 counter.className = 'photo-counter';
-                counter.textContent = `${index + 1}/${photos.length}`;
+                counter.textContent = (index + 1) + '/' + photos.length;
                 div.appendChild(counter);
                 
                 grid.appendChild(div);
@@ -534,8 +663,8 @@
             const img = document.getElementById('lightboxImage');
             const item = allPhotos[index];
             
-            img.src = `photos/${item.theme}/${item.photo}`;
-            document.getElementById('lightboxCaption').textContent = `${item.photo} (${index + 1}/${allPhotos.length})`;
+            img.src = 'photos/' + item.theme + '/' + item.photo;
+            document.getElementById('lightboxCaption').textContent = item.photo + ' (' + (index + 1) + '/' + allPhotos.length + ')';
             
             lightbox.classList.add('visible');
             document.body.style.overflow = 'hidden';
@@ -566,28 +695,6 @@
             if (e.key === 'ArrowRight') navigateLightbox(1);
         });
         
-        // 音乐控制
-        function toggleMusic() {
-            const music = document.getElementById('bgMusic');
-            const btn = document.getElementById('musicControl');
-            
-            if (isMusicPlaying) {
-                music.pause();
-                btn.textContent = '🎵';
-                btn.classList.remove('playing');
-                isMusicPlaying = false;
-            } else {
-                music.play().then(() => {
-                    btn.textContent = '🎶';
-                    btn.classList.add('playing');
-                    isMusicPlaying = true;
-                }).catch(e => {
-                    console.error('播放失败:', e);
-                    alert('音乐播放失败，请检查网络连接');
-                });
-            }
-        }
-        
         // 进入相册
         function enterAlbum() {
             const intro = document.getElementById('intro');
@@ -596,15 +703,6 @@
             intro.classList.add('hidden');
             setTimeout(() => {
                 main.classList.add('visible');
-                // 尝试自动播放音乐
-                const music = document.getElementById('bgMusic');
-                music.play().then(() => {
-                    document.getElementById('musicControl').textContent = '🎶';
-                    document.getElementById('musicControl').classList.add('playing');
-                    isMusicPlaying = true;
-                }).catch(e => {
-                    console.log('自动播放被阻止，需要用户交互');
-                });
             }, 800);
         }
     </script>
